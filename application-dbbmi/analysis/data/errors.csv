@@ -1,0 +1,179 @@
+kernel,error_code,error_msg,phase,count,relative,model,job,run,fold,a,b,nparam,trafo_target_slope,index
+kernel_00,1,divergent transition,warmup,76,0.0038,ptm,001g-ptm,20250905-162717,1,-4,4,20,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250905-162717,1,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,warmup,1018,0.0509,ptm,001g-ptm,20250905-162717,1,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250905-162717,1,-4,4,20,identity,NA
+kernel_00,1,divergent transition,warmup,89,0.00445,ptm,001g-ptm,20250905-162149,1,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250905-162149,1,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,2000,0.1,ptm,001g-ptm,20250905-162149,1,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250905-162149,1,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,105,0.00524999999999999,ptm,001g-ptm,20250906-011016,1,-4,7,30,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250906-011016,1,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,warmup,3622,0.1811,ptm,001g-ptm,20250906-011016,1,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250906-011016,1,-4,7,30,identity,NA
+kernel_00,1,divergent transition,warmup,105,0.00524999999999999,ptm,001g-ptm,20250906-013012,1,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250906-013012,1,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,3622,0.1811,ptm,001g-ptm,20250906-013012,1,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250906-013012,1,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,81,0.00405,ptm,001g-ptm,20250905-161943,2,-4,4,20,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250905-161943,2,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,warmup,1247,0.06234999999999999,ptm,001g-ptm,20250905-161943,2,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250905-161943,2,-4,4,20,identity,NA
+kernel_00,1,divergent transition,warmup,98,0.0049,ptm,001g-ptm,20250906-014708,2,-4,7,30,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250906-014708,2,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,warmup,2891,0.14455,ptm,001g-ptm,20250906-014708,2,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250906-014708,2,-4,7,30,identity,NA
+kernel_00,1,divergent transition,warmup,98,0.0049,ptm,001g-ptm,20250906-014942,2,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250906-014942,2,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,2891,0.14455,ptm,001g-ptm,20250906-014942,2,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250906-014942,2,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,86,0.0043,ptm,001g-ptm,20250905-163231,2,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250905-163231,2,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,2272,0.1136,ptm,001g-ptm,20250905-163231,2,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250905-163231,2,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,95,0.00475,ptm,001g-ptm,20250906-004707,3,-4,7,30,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250906-004707,3,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,warmup,3434,0.17170000000000002,ptm,001g-ptm,20250906-004707,3,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250906-004707,3,-4,7,30,identity,NA
+kernel_00,1,divergent transition,warmup,95,0.00475,ptm,001g-ptm,20250906-020651,3,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250906-020651,3,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,3434,0.17170000000000002,ptm,001g-ptm,20250906-020651,3,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250906-020651,3,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,85,0.00425,ptm,001g-ptm,20250905-162850,3,-4,4,20,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250905-162850,3,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,warmup,1174,0.0587,ptm,001g-ptm,20250905-162850,3,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250905-162850,3,-4,4,20,identity,NA
+kernel_00,1,divergent transition,warmup,78,0.0039,ptm,001g-ptm,20250905-170526,3,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250905-170526,3,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,2486,0.1243,ptm,001g-ptm,20250905-170526,3,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250905-170526,3,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,91,0.00454999999999999,ptm,001g-ptm,20250906-021340,4,-4,7,30,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250906-021340,4,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,warmup,3722,0.1861,ptm,001g-ptm,20250906-021340,4,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250906-021340,4,-4,7,30,identity,NA
+kernel_00,1,divergent transition,warmup,89,0.00444999999999999,ptm,001g-ptm,20250906-020052,4,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250906-020052,4,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,3709,0.18545,ptm,001g-ptm,20250906-020052,4,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250906-020052,4,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,83,0.00415,ptm,001g-ptm,20250905-161343,4,-4,4,20,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250905-161343,4,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,warmup,993,0.04965,ptm,001g-ptm,20250905-161343,4,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250905-161343,4,-4,4,20,identity,NA
+kernel_00,1,divergent transition,warmup,72,0.0036,ptm,001g-ptm,20250905-170332,4,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250905-170332,4,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,2328,0.1164,ptm,001g-ptm,20250905-170332,4,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250905-170332,4,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,97,0.00485,ptm,001g-ptm,20250906-040240,5,-4,7,30,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250906-040240,5,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,warmup,3589,0.17945000000000003,ptm,001g-ptm,20250906-040240,5,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250906-040240,5,-4,7,30,identity,NA
+kernel_00,1,divergent transition,warmup,97,0.00485,ptm,001g-ptm,20250906-042400,5,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250906-042400,5,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,3589,0.17945000000000003,ptm,001g-ptm,20250906-042400,5,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250906-042400,5,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,89,0.00445,ptm,001g-ptm,20250905-164406,5,-4,4,20,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250905-164406,5,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,warmup,1148,0.05740000000000001,ptm,001g-ptm,20250905-164406,5,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250905-164406,5,-4,4,20,identity,NA
+kernel_00,1,divergent transition,warmup,84,0.0042,ptm,001g-ptm,20250905-172929,5,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250905-172929,5,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,2192,0.1096,ptm,001g-ptm,20250905-172929,5,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250905-172929,5,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,93,0.00465,ptm,001g-ptm,20250905-163845,6,-4,4,20,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250905-163845,6,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,warmup,1160,0.05799999999999999,ptm,001g-ptm,20250905-163845,6,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250905-163845,6,-4,4,20,identity,NA
+kernel_00,1,divergent transition,warmup,88,0.0044,ptm,001g-ptm,20250905-163210,6,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250905-163210,6,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,2523,0.12614999999999998,ptm,001g-ptm,20250905-163210,6,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250905-163210,6,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,104,0.0052,ptm,001g-ptm,20250906-040105,6,-4,7,30,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250906-040105,6,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,warmup,3684,0.1842,ptm,001g-ptm,20250906-040105,6,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250906-040105,6,-4,7,30,identity,NA
+kernel_00,1,divergent transition,warmup,104,0.0052,ptm,001g-ptm,20250906-042214,6,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250906-042214,6,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,3684,0.1842,ptm,001g-ptm,20250906-042214,6,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250906-042214,6,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,88,0.0044,ptm,001g-ptm,20250905-163812,7,-4,4,20,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250905-163812,7,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,warmup,1328,0.06639999999999999,ptm,001g-ptm,20250905-163812,7,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250905-163812,7,-4,4,20,identity,NA
+kernel_00,1,divergent transition,warmup,89,0.00445,ptm,001g-ptm,20250905-165830,7,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250905-165830,7,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,2215,0.11075000000000002,ptm,001g-ptm,20250905-165830,7,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250905-165830,7,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,110,0.0055,ptm,001g-ptm,20250906-035810,7,-4,7,30,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250906-035810,7,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,warmup,3152,0.15760000000000002,ptm,001g-ptm,20250906-035810,7,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250906-035810,7,-4,7,30,identity,NA
+kernel_00,1,divergent transition,warmup,106,0.00529999999999999,ptm,001g-ptm,20250906-042539,7,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250906-042539,7,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,3052,0.1526,ptm,001g-ptm,20250906-042539,7,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250906-042539,7,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,90,0.0045,ptm,001g-ptm,20250905-162405,8,-4,4,20,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250905-162405,8,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,warmup,1117,0.05585,ptm,001g-ptm,20250905-162405,8,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250905-162405,8,-4,4,20,identity,NA
+kernel_00,1,divergent transition,warmup,75,0.00375,ptm,001g-ptm,20250905-203415,8,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250905-203415,8,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,2373,0.11865,ptm,001g-ptm,20250905-203415,8,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250905-203415,8,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,98,0.0049,ptm,001g-ptm,20250906-043939,8,-4,7,30,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250906-043939,8,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,warmup,3481,0.17404999999999998,ptm,001g-ptm,20250906-043939,8,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250906-043939,8,-4,7,30,identity,NA
+kernel_00,1,divergent transition,warmup,98,0.0049,ptm,001g-ptm,20250906-064707,8,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250906-064707,8,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,3481,0.17404999999999998,ptm,001g-ptm,20250906-064707,8,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250906-064707,8,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,77,0.00385,ptm,001g-ptm,20250905-204150,9,-4,4,20,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250905-204150,9,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,warmup,1267,0.06334999999999999,ptm,001g-ptm,20250905-204150,9,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250905-204150,9,-4,4,20,identity,NA
+kernel_00,1,divergent transition,warmup,84,0.0042,ptm,001g-ptm,20250905-211111,9,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250905-211111,9,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,2352,0.1176,ptm,001g-ptm,20250905-211111,9,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250905-211111,9,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,91,0.00455,ptm,001g-ptm,20250906-070913,9,-4,7,30,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250906-070913,9,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,warmup,3883,0.19415,ptm,001g-ptm,20250906-070913,9,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250906-070913,9,-4,7,30,identity,NA
+kernel_00,1,divergent transition,warmup,90,0.0045,ptm,001g-ptm,20250906-072048,9,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250906-072048,9,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,3877,0.19385,ptm,001g-ptm,20250906-072048,9,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250906-072048,9,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,77,0.00384999999999999,ptm,001g-ptm,20250905-203816,10,-4,4,20,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250905-203816,10,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,warmup,978,0.0489,ptm,001g-ptm,20250905-203816,10,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250905-203816,10,-4,4,20,identity,NA
+kernel_00,1,divergent transition,warmup,96,0.0048,ptm,001g-ptm,20250905-210108,10,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250905-210108,10,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,1900,0.095,ptm,001g-ptm,20250905-210108,10,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250905-210108,10,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,99,0.00495,ptm,001g-ptm,20250906-073227,10,-4,7,30,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250906-073227,10,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,warmup,2911,0.14554999999999998,ptm,001g-ptm,20250906-073227,10,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250906-073227,10,-4,7,30,identity,NA
+kernel_00,1,divergent transition,warmup,99,0.00495,ptm,001g-ptm,20250906-072514,10,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001g-ptm,20250906-072514,10,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,2911,0.14554999999999998,ptm,001g-ptm,20250906-072514,10,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001g-ptm,20250906-072514,10,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,79,0.00394999999999999,ptm,001h-ptm,20250905-174943,-1,-4,4,20,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001h-ptm,20250905-174943,-1,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,warmup,1583,0.07915,ptm,001h-ptm,20250905-174943,-1,-4,4,20,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001h-ptm,20250905-174943,-1,-4,4,20,identity,NA
+kernel_00,1,divergent transition,warmup,85,0.00424999999999999,ptm,001h-ptm,20250905-180527,-1,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001h-ptm,20250905-180527,-1,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,2702,0.1351,ptm,001h-ptm,20250905-180527,-1,-4,4,20,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001h-ptm,20250905-180527,-1,-4,4,20,continue_linearly,NA
+kernel_00,1,divergent transition,warmup,95,0.00474999999999999,ptm,001h-ptm,20250906-020617,-1,-4,7,30,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001h-ptm,20250906-020617,-1,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,warmup,3950,0.1975,ptm,001h-ptm,20250906-020617,-1,-4,7,30,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001h-ptm,20250906-020617,-1,-4,7,30,identity,NA
+kernel_00,1,divergent transition,warmup,95,0.00474999999999999,ptm,001h-ptm,20250906-033954,-1,-4,7,30,continue_linearly,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm,001h-ptm,20250906-033954,-1,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,warmup,3950,0.1975,ptm,001h-ptm,20250906-033954,-1,-4,7,30,continue_linearly,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm,001h-ptm,20250906-033954,-1,-4,7,30,continue_linearly,NA
+kernel_00,90,nan acceptance prob,warmup,3,1.499999925727e-4,gaussian,002-gaussian,20250826-163641,1,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian,002-gaussian,20250826-163641,1,NA,NA,NA,NA,NA
