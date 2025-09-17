@@ -28,7 +28,8 @@ data ("standardized conditional density").
 
 - `demos/dutch-growth-study.ipynb`: An illustrative jupyter notebook, showcasing the application of a PTM to the fourth dutch growth study.
 - `demos/framingham-heart-study.ipynb`: An illustrative jupyter notebook, showcasing the application of a PTM to the fourth dutch growth study.
-- `applications/`: R and Python code for the application comparisons reported in the paper.
+- `application-dbbmi/` and `application-fh/`: R and Python code for the application comparisons reported in the paper. Instructions for running this code are included at the end of this readme.
+- `application-dbbmi/analysis` and `application-fh/analysis`: Data and code for all application-related analyses reported in the paper.
 
 
 ## Set Up
@@ -37,7 +38,7 @@ To run the demo notebooks, you need the following available:
 
 1. A working installation of Python 3.13 or newer
 2. A Python environment, ideally a virtual environment, with the following packages installed:
-    - `liesel==0.4.2`
+    - `liesel` development version from the current GitHub main branch
     - `liesel_ptm==0.1.0`
     - `ipykernel` (for running a jupyter notebook)
     - `jupyter` (for running a jupyter notebook)
@@ -100,7 +101,8 @@ source .venv/bin/activate
 Now install the required packages via:
 
 ```
-pip install liesel liesel_ptm ipykernel jupyter
+pip install https://github.com/liesel-devs/liesel.git
+pip install liesel_ptm ipykernel jupyter
 ```
 
 #### Launch Jupyter Notebook
@@ -176,7 +178,8 @@ If successful, your prompt will change and show something like:
 Now install the required packages:
 
 ```
-pip install liesel liesel_ptm ipykernel jupyter
+pip install https://github.com/liesel-devs/liesel.git
+pip install liesel_ptm ipykernel jupyter
 ```
 
 
@@ -191,3 +194,25 @@ jupyter notebook demos\dutch-growth-study.ipynb
 ```
 jupyter notebook demos\framingham-heart-study.ipynb
 ```
+
+
+
+## Instructions for running application comparison code
+
+- Each application directory contains a subdirectory for each model.
+- Each of these directories contains a `launch.py`. This can script can be run to run the comparisons.
+- Note that, for most models, `launch.py` is called with `testing=True`, which will run the code with testing settings so that it finishes faster.
+- Each `run.R` and `run.py` is written such that it can also be run directly on its own, without going through `launch.py`.
+
+
+### Reproducible R environment
+
+This project uses `renv` to facilitate reproducibility of R packages. To obtain
+a reproducible R environment, please run:
+
+```r
+install.packages("renv")
+renv::restore()
+```
+
+See https://rstudio.github.io/renv/index.html for more information.
