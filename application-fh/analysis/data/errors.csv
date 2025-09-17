@@ -1,0 +1,363 @@
+kernel,error_code,error_msg,phase,count,relative,model,job,run,fold,a,b,nparam,trafo_target_slope,index
+kernel_00,1,divergent transition,warmup,103,0.00515,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-210912,-1,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,1,5e-5,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-210912,-1,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,164,0.0082,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-210912,-1,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-210912,-1,-7,7,40,identity,NA
+kernel_02,90,nan acceptance prob,warmup,1,5e-5,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-210912,-1,-7,7,40,identity,NA
+kernel_02,90,nan acceptance prob,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-210912,-1,-7,7,40,identity,NA
+kernel_06,1,divergent transition,warmup,33,0.00165,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-210912,-1,-7,7,40,identity,NA
+kernel_06,1,divergent transition,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-210912,-1,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,93,0.00465,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205339,1,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205339,1,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,135,0.00674999999999999,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205339,1,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205339,1,-7,7,40,identity,NA
+kernel_06,1,divergent transition,warmup,36,0.0018,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205339,1,-7,7,40,identity,NA
+kernel_06,1,divergent transition,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205339,1,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,96,0.0048,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205601,2,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,1,5e-5,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205601,2,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,194,0.0097,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205601,2,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205601,2,-7,7,40,identity,NA
+kernel_06,1,divergent transition,warmup,32,0.00159999999999999,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205601,2,-7,7,40,identity,NA
+kernel_06,1,divergent transition,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205601,2,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,109,0.00545,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205554,3,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205554,3,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,158,0.00789999999999999,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205554,3,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205554,3,-7,7,40,identity,NA
+kernel_06,1,divergent transition,warmup,27,0.00134999999999999,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205554,3,-7,7,40,identity,NA
+kernel_06,1,divergent transition,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205554,3,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,89,0.00445,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205857,4,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205857,4,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,102,0.00509999999999999,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205857,4,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205857,4,-7,7,40,identity,NA
+kernel_06,1,divergent transition,warmup,37,0.00185,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205857,4,-7,7,40,identity,NA
+kernel_06,1,divergent transition,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205857,4,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,98,0.0049,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-210240,5,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-210240,5,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,128,0.00639999999999999,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-210240,5,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-210240,5,-7,7,40,identity,NA
+kernel_06,1,divergent transition,warmup,40,0.002,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-210240,5,-7,7,40,identity,NA
+kernel_06,1,divergent transition,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-210240,5,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,88,0.00439999999999999,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205447,6,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205447,6,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,164,0.0082,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205447,6,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205447,6,-7,7,40,identity,NA
+kernel_06,1,divergent transition,warmup,31,0.00155,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205447,6,-7,7,40,identity,NA
+kernel_06,1,divergent transition,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205447,6,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,107,0.00535,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205308,7,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205308,7,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,66,0.0033,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205308,7,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205308,7,-7,7,40,identity,NA
+kernel_06,1,divergent transition,warmup,35,0.00174999999999999,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205308,7,-7,7,40,identity,NA
+kernel_06,1,divergent transition,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205308,7,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,93,0.00465,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205822,8,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205822,8,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,123,0.00614999999999999,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205822,8,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,1,5e-5,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205822,8,-7,7,40,identity,NA
+kernel_06,1,divergent transition,warmup,44,0.0022,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205822,8,-7,7,40,identity,NA
+kernel_06,1,divergent transition,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205822,8,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,106,0.0053,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-210027,9,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-210027,9,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,139,0.00695,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-210027,9,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-210027,9,-7,7,40,identity,NA
+kernel_06,1,divergent transition,warmup,37,0.00185,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-210027,9,-7,7,40,identity,NA
+kernel_06,1,divergent transition,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-210027,9,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,104,0.0052,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205705,10,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205705,10,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,134,0.00669999999999999,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205705,10,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205705,10,-7,7,40,identity,NA
+kernel_06,1,divergent transition,warmup,36,0.0018,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205705,10,-7,7,40,identity,NA
+kernel_06,1,divergent transition,posterior,0,0,ptm-nonlinear-77-id,001c-ptm-nonlinear,20250909-205705,10,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,100,0.005,ptm-linear-77-id,002c-ptm-linear,20250909-211407,-1,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-211407,-1,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,134,0.0067,ptm-linear-77-id,002c-ptm-linear,20250909-211407,-1,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-211407,-1,-7,7,40,identity,NA
+kernel_05,1,divergent transition,warmup,36,0.0018,ptm-linear-77-id,002c-ptm-linear,20250909-211407,-1,-7,7,40,identity,NA
+kernel_05,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-211407,-1,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,90,0.0045,ptm-linear-77-id,002c-ptm-linear,20250909-210244,1,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-210244,1,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,80,0.004,ptm-linear-77-id,002c-ptm-linear,20250909-210244,1,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-210244,1,-7,7,40,identity,NA
+kernel_05,1,divergent transition,warmup,35,0.00175,ptm-linear-77-id,002c-ptm-linear,20250909-210244,1,-7,7,40,identity,NA
+kernel_05,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-210244,1,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,105,0.00524999999999999,ptm-linear-77-id,002c-ptm-linear,20250909-205113,2,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-205113,2,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,156,0.0078,ptm-linear-77-id,002c-ptm-linear,20250909-205113,2,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-205113,2,-7,7,40,identity,NA
+kernel_05,1,divergent transition,warmup,33,0.00165,ptm-linear-77-id,002c-ptm-linear,20250909-205113,2,-7,7,40,identity,NA
+kernel_05,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-205113,2,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,106,0.0053,ptm-linear-77-id,002c-ptm-linear,20250909-210311,3,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-210311,3,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,171,0.00855,ptm-linear-77-id,002c-ptm-linear,20250909-210311,3,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-210311,3,-7,7,40,identity,NA
+kernel_05,1,divergent transition,warmup,31,0.00155,ptm-linear-77-id,002c-ptm-linear,20250909-210311,3,-7,7,40,identity,NA
+kernel_05,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-210311,3,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,87,0.00435,ptm-linear-77-id,002c-ptm-linear,20250909-210051,4,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-210051,4,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,66,0.0033,ptm-linear-77-id,002c-ptm-linear,20250909-210051,4,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-210051,4,-7,7,40,identity,NA
+kernel_05,1,divergent transition,warmup,37,0.00185,ptm-linear-77-id,002c-ptm-linear,20250909-210051,4,-7,7,40,identity,NA
+kernel_05,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-210051,4,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,94,0.00469999999999999,ptm-linear-77-id,002c-ptm-linear,20250909-210851,5,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-210851,5,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,116,0.0058,ptm-linear-77-id,002c-ptm-linear,20250909-210851,5,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-210851,5,-7,7,40,identity,NA
+kernel_05,1,divergent transition,warmup,39,0.00195,ptm-linear-77-id,002c-ptm-linear,20250909-210851,5,-7,7,40,identity,NA
+kernel_05,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-210851,5,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,99,0.00495,ptm-linear-77-id,002c-ptm-linear,20250909-210332,6,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-210332,6,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,99,0.00495,ptm-linear-77-id,002c-ptm-linear,20250909-210332,6,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-210332,6,-7,7,40,identity,NA
+kernel_05,1,divergent transition,warmup,32,0.00159999999999999,ptm-linear-77-id,002c-ptm-linear,20250909-210332,6,-7,7,40,identity,NA
+kernel_05,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-210332,6,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,94,0.0047,ptm-linear-77-id,002c-ptm-linear,20250909-210015,7,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-210015,7,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,109,0.00545,ptm-linear-77-id,002c-ptm-linear,20250909-210015,7,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-210015,7,-7,7,40,identity,NA
+kernel_05,1,divergent transition,warmup,33,0.00165,ptm-linear-77-id,002c-ptm-linear,20250909-210015,7,-7,7,40,identity,NA
+kernel_05,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-210015,7,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,93,0.00465,ptm-linear-77-id,002c-ptm-linear,20250909-205953,8,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-205953,8,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,85,0.00425,ptm-linear-77-id,002c-ptm-linear,20250909-205953,8,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-205953,8,-7,7,40,identity,NA
+kernel_05,1,divergent transition,warmup,40,0.002,ptm-linear-77-id,002c-ptm-linear,20250909-205953,8,-7,7,40,identity,NA
+kernel_05,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-205953,8,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,100,0.005,ptm-linear-77-id,002c-ptm-linear,20250909-205729,9,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-205729,9,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,87,0.00435,ptm-linear-77-id,002c-ptm-linear,20250909-205729,9,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-205729,9,-7,7,40,identity,NA
+kernel_05,1,divergent transition,warmup,33,0.00165,ptm-linear-77-id,002c-ptm-linear,20250909-205729,9,-7,7,40,identity,NA
+kernel_05,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-205729,9,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,96,0.0048,ptm-linear-77-id,002c-ptm-linear,20250909-210222,10,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,1,5e-5,ptm-linear-77-id,002c-ptm-linear,20250909-210222,10,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,89,0.00445,ptm-linear-77-id,002c-ptm-linear,20250909-210222,10,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-210222,10,-7,7,40,identity,NA
+kernel_05,1,divergent transition,warmup,40,0.002,ptm-linear-77-id,002c-ptm-linear,20250909-210222,10,-7,7,40,identity,NA
+kernel_05,1,divergent transition,posterior,0,0,ptm-linear-77-id,002c-ptm-linear,20250909-210222,10,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,85,0.00425,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250906-002813,-1,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250906-002813,-1,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,180,0.009,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250906-002813,-1,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250906-002813,-1,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,90,0.0045,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-144923,1,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-144923,1,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,127,0.00635,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-144923,1,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-144923,1,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,92,0.0046,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-145234,2,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-145234,2,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,123,0.00615,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-145234,2,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-145234,2,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,88,0.0044,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-164321,3,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-164321,3,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,166,0.0083,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-164321,3,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-164321,3,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,98,0.0049,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-164958,4,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-164958,4,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,216,0.0108,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-164958,4,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-164958,4,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,88,0.00439999999999999,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-184022,5,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-184022,5,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,110,0.0055,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-184022,5,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-184022,5,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,87,0.00435,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-184411,6,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-184411,6,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,93,0.00465,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-184411,6,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-184411,6,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,101,0.00505,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-204522,7,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-204522,7,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,204,0.0102,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-204522,7,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-204522,7,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,94,0.00469999999999999,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-204445,8,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-204445,8,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,156,0.0078,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-204445,8,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-204445,8,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,90,0.0045,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-224452,9,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-224452,9,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,110,0.0055,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-224452,9,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-224452,9,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,91,0.00455,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-224604,10,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-224604,10,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,108,0.0054,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-224604,10,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-nonlinear-nori-77-id,003d-ptm-nonlinear-nori-iwls,20250905-224604,10,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,87,0.00435,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250906-000552,-1,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250906-000552,-1,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,90,0.0045,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250906-000552,-1,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250906-000552,-1,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,90,0.0045,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-144555,1,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-144555,1,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,77,0.00384999999999999,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-144555,1,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-144555,1,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,84,0.0042,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-144434,2,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-144434,2,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,79,0.00395,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-144434,2,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-144434,2,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,87,0.00435,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-164719,3,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-164719,3,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,103,0.00515,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-164719,3,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-164719,3,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,102,0.0051,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-164229,4,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-164229,4,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,136,0.0068,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-164229,4,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-164229,4,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,87,0.00435,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-183411,5,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-183411,5,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,112,0.0056,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-183411,5,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-183411,5,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,76,0.00379999999999999,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-185154,6,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-185154,6,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,81,0.00405,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-185154,6,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-185154,6,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,95,0.00475,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-202543,7,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-202543,7,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,87,0.00435,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-202543,7,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-202543,7,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,77,0.00385,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-203751,8,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-203751,8,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,100,0.00499999999999999,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-203751,8,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-203751,8,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,87,0.00435,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-222114,9,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-222114,9,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,57,0.00284999999999999,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-222114,9,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-222114,9,-7,7,40,identity,NA
+kernel_00,1,divergent transition,warmup,98,0.0049,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-222212,10,-7,7,40,identity,NA
+kernel_00,1,divergent transition,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-222212,10,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,warmup,104,0.0052,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-222212,10,-7,7,40,identity,NA
+kernel_00,2,maximum tree depth,posterior,0,0,ptm-linear-nori-77-id,004d-ptm-linear-nori-iwls,20250905-222212,10,-7,7,40,identity,NA
+kernel_01,90,nan acceptance prob,warmup,6,2.999999851454e-4,gaussian-nonlinear,005-gaussian-nonlinear,20250909-145241,-1,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear,005-gaussian-nonlinear,20250909-145241,-1,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,warmup,85,0.00425000023096799,gaussian-nonlinear,005-gaussian-nonlinear,20250909-145241,-1,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,posterior,0,0,gaussian-nonlinear,005-gaussian-nonlinear,20250909-145241,-1,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,8,3.9999998989515e-4,gaussian-nonlinear,005-gaussian-nonlinear,20250909-142541,1,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear,005-gaussian-nonlinear,20250909-142541,1,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,warmup,95,0.00475000031292438,gaussian-nonlinear,005-gaussian-nonlinear,20250909-142541,1,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,posterior,0,0,gaussian-nonlinear,005-gaussian-nonlinear,20250909-142541,1,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,7,3.4999998752027e-4,gaussian-nonlinear,005-gaussian-nonlinear,20250909-142535,2,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear,005-gaussian-nonlinear,20250909-142535,2,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,warmup,111,0.00554999988526105,gaussian-nonlinear,005-gaussian-nonlinear,20250909-142535,2,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,posterior,1,4.999999873689376e-5,gaussian-nonlinear,005-gaussian-nonlinear,20250909-142535,2,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,11,5.4999999701976e-4,gaussian-nonlinear,005-gaussian-nonlinear,20250909-142549,3,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear,005-gaussian-nonlinear,20250909-142549,3,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,warmup,84,0.00420000031590461,gaussian-nonlinear,005-gaussian-nonlinear,20250909-142549,3,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,posterior,0,0,gaussian-nonlinear,005-gaussian-nonlinear,20250909-142549,3,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,8,4.0000001899898e-4,gaussian-nonlinear,005-gaussian-nonlinear,20250909-143342,4,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear,005-gaussian-nonlinear,20250909-143342,4,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,warmup,103,0.00515000009909272,gaussian-nonlinear,005-gaussian-nonlinear,20250909-143342,4,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,posterior,0,0,gaussian-nonlinear,005-gaussian-nonlinear,20250909-143342,4,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,8,4.0000001899898e-4,gaussian-nonlinear,005-gaussian-nonlinear,20250909-143343,5,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear,005-gaussian-nonlinear,20250909-143343,5,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,warmup,78,0.00389999989420175,gaussian-nonlinear,005-gaussian-nonlinear,20250909-143343,5,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,posterior,0,0,gaussian-nonlinear,005-gaussian-nonlinear,20250909-143343,5,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,9,4.4999999227002e-4,gaussian-nonlinear,005-gaussian-nonlinear,20250909-143358,6,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear,005-gaussian-nonlinear,20250909-143358,6,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,warmup,107,0.00535000022500753,gaussian-nonlinear,005-gaussian-nonlinear,20250909-143358,6,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,posterior,0,0,gaussian-nonlinear,005-gaussian-nonlinear,20250909-143358,6,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,10,4.9999996554106e-4,gaussian-nonlinear,005-gaussian-nonlinear,20250909-144146,7,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear,005-gaussian-nonlinear,20250909-144146,7,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,warmup,107,0.00535000022500753,gaussian-nonlinear,005-gaussian-nonlinear,20250909-144146,7,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,posterior,0,0,gaussian-nonlinear,005-gaussian-nonlinear,20250909-144146,7,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,11,5.4999999701976e-4,gaussian-nonlinear,005-gaussian-nonlinear,20250909-144141,8,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear,005-gaussian-nonlinear,20250909-144141,8,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,warmup,130,0.00650000013411045,gaussian-nonlinear,005-gaussian-nonlinear,20250909-144141,8,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,posterior,0,0,gaussian-nonlinear,005-gaussian-nonlinear,20250909-144141,8,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,12,5.999999702908e-4,gaussian-nonlinear,005-gaussian-nonlinear,20250909-144206,9,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear,005-gaussian-nonlinear,20250909-144206,9,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,warmup,106,0.00530000030994415,gaussian-nonlinear,005-gaussian-nonlinear,20250909-144206,9,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,posterior,11,5.4999999701976e-4,gaussian-nonlinear,005-gaussian-nonlinear,20250909-144206,9,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,12,6.0000002849847e-4,gaussian-nonlinear,005-gaussian-nonlinear,20250909-145117,10,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear,005-gaussian-nonlinear,20250909-145117,10,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,warmup,85,0.00425000023096799,gaussian-nonlinear,005-gaussian-nonlinear,20250909-145117,10,NA,NA,NA,NA,NA
+kernel_05,1,divergent transition,posterior,0,0,gaussian-nonlinear,005-gaussian-nonlinear,20250909-145117,10,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,2,9.999999747378752e-5,gaussian-linear,006-gaussian-linear,20250909-144444,-1,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-144444,-1,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,warmup,75,0.00375000014901161,gaussian-linear,006-gaussian-linear,20250909-144444,-1,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-144444,-1,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,5,2.4999998277053e-4,gaussian-linear,006-gaussian-linear,20250909-142412,1,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-142412,1,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,warmup,97,0.00485000014305114,gaussian-linear,006-gaussian-linear,20250909-142412,1,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-142412,1,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,3,1.499999925727e-4,gaussian-linear,006-gaussian-linear,20250909-142409,2,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-142409,2,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,warmup,118,0.0059000002220273,gaussian-linear,006-gaussian-linear,20250909-142409,2,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-142409,2,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,3,1.499999925727e-4,gaussian-linear,006-gaussian-linear,20250909-142405,3,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-142405,3,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,warmup,100,0.00500000035390257,gaussian-linear,006-gaussian-linear,20250909-142405,3,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-142405,3,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,6,3.0000001424923e-4,gaussian-linear,006-gaussian-linear,20250909-143042,4,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-143042,4,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,warmup,131,0.00655000004917383,gaussian-linear,006-gaussian-linear,20250909-143042,4,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-143042,4,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,4,1.9999999494757e-4,gaussian-linear,006-gaussian-linear,20250909-143049,5,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-143049,5,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,warmup,94,0.004700000397861,gaussian-linear,006-gaussian-linear,20250909-143049,5,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-143049,5,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,3,1.499999925727e-4,gaussian-linear,006-gaussian-linear,20250909-143107,6,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-143107,6,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,warmup,86,0.00430000014603138,gaussian-linear,006-gaussian-linear,20250909-143107,6,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-143107,6,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,6,2.999999851454e-4,gaussian-linear,006-gaussian-linear,20250909-143726,7,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-143726,7,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,warmup,98,0.00490000005811452,gaussian-linear,006-gaussian-linear,20250909-143726,7,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-143726,7,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,3,1.499999925727e-4,gaussian-linear,006-gaussian-linear,20250909-143736,8,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-143736,8,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,warmup,102,0.00510000018402934,gaussian-linear,006-gaussian-linear,20250909-143736,8,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-143736,8,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,4,1.9999999494757e-4,gaussian-linear,006-gaussian-linear,20250909-143755,9,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-143755,9,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,warmup,74,0.00370000023394823,gaussian-linear,006-gaussian-linear,20250909-143755,9,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-143755,9,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,2,9.999999747378752e-5,gaussian-linear,006-gaussian-linear,20250909-144411,10,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-144411,10,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,warmup,106,0.00530000030994415,gaussian-linear,006-gaussian-linear,20250909-144411,10,NA,NA,NA,NA,NA
+kernel_04,1,divergent transition,posterior,0,0,gaussian-linear,006-gaussian-linear,20250909-144411,10,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,1,4.999999873689376e-5,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-151910,-1,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-151910,-1,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,5,2.4999998277053e-4,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-151910,-1,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-151910,-1,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,2,9.999999747378752e-5,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-145915,1,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-145915,1,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,5,2.5000001187436e-4,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-145915,1,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-145915,1,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,1,4.999999873689376e-5,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-145909,2,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-145909,2,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,9,4.5000002137385e-4,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-145909,2,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-145909,2,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,1,4.999999873689376e-5,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-145905,3,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-145905,3,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,4,1.9999999494757e-4,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-145905,3,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-145905,3,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,5,2.5000001187436e-4,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-150519,4,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-150519,4,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,8,3.9999998989515e-4,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-150522,5,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-150522,5,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,4,1.9999999494757e-4,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-150526,6,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-150526,6,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,8,4.0000001899898e-4,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-151131,7,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-151131,7,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,10,4.9999996554106e-4,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-151134,8,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-151134,8,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,7,3.4999998752027e-4,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-151115,9,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-151115,9,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,10,5.0000002374872e-4,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-151835,10,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-nonlinear-nori,007-gaussian-nonlinear-nori,20250909-151835,10,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,2,9.999999747378752e-5,gaussian-linear-nori,008-gaussian-linear-nori,20250909-151008,-1,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-linear-nori,008-gaussian-linear-nori,20250909-151008,-1,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,1,4.999999873689376e-5,gaussian-linear-nori,008-gaussian-linear-nori,20250909-145720,1,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-linear-nori,008-gaussian-linear-nori,20250909-145720,1,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,1,4.999999873689376e-5,gaussian-linear-nori,008-gaussian-linear-nori,20250909-145720,1,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-linear-nori,008-gaussian-linear-nori,20250909-145720,1,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,1,4.999999873689376e-5,gaussian-linear-nori,008-gaussian-linear-nori,20250909-145717,2,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-linear-nori,008-gaussian-linear-nori,20250909-145717,2,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,warmup,1,4.999999873689376e-5,gaussian-linear-nori,008-gaussian-linear-nori,20250909-145705,3,NA,NA,NA,NA,NA
+kernel_01,90,nan acceptance prob,posterior,0,0,gaussian-linear-nori,008-gaussian-linear-nori,20250909-145705,3,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,1,4.999999873689376e-5,gaussian-linear-nori,008-gaussian-linear-nori,20250909-150138,4,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-linear-nori,008-gaussian-linear-nori,20250909-150138,4,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,2,9.999999747378752e-5,gaussian-linear-nori,008-gaussian-linear-nori,20250909-150139,5,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-linear-nori,008-gaussian-linear-nori,20250909-150139,5,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,1,4.999999873689376e-5,gaussian-linear-nori,008-gaussian-linear-nori,20250909-150211,6,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-linear-nori,008-gaussian-linear-nori,20250909-150211,6,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,1,4.999999873689376e-5,gaussian-linear-nori,008-gaussian-linear-nori,20250909-150608,7,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-linear-nori,008-gaussian-linear-nori,20250909-150608,7,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,1,4.999999873689376e-5,gaussian-linear-nori,008-gaussian-linear-nori,20250909-150605,8,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-linear-nori,008-gaussian-linear-nori,20250909-150605,8,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,warmup,1,4.999999873689376e-5,gaussian-linear-nori,008-gaussian-linear-nori,20250909-151010,10,NA,NA,NA,NA,NA
+kernel_00,90,nan acceptance prob,posterior,0,0,gaussian-linear-nori,008-gaussian-linear-nori,20250909-151010,10,NA,NA,NA,NA,NA

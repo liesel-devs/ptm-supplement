@@ -1,0 +1,22 @@
+
+\begin{tabu} to \linewidth {>{\raggedleft\arraybackslash}p{9em}>{\centering}X>{\centering}X>{\centering}X>{\centering}X>{\centering}X}
+\toprule
+\multicolumn{1}{c}{ } & \multicolumn{2}{c}{4th Dutch Growth Study} & \multicolumn{3}{c}{Framingham Heart Study} \\
+\cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-6}
+\multicolumn{3}{c}{ } & \multicolumn{2}{c}{Without RI} & \multicolumn{1}{c}{With RI} \\
+\cmidrule(l{3pt}r{3pt}){4-5} \cmidrule(l{3pt}r{3pt}){6-6}
+Model & Log Score & CRPS & Log Score & CRPS & CRPS\\
+\midrule
+PTM (nonlin) & 688.1 & 0.372 & 138.6 & 0.527 & 0.534\\
+PTM (lin) & - & - & 139.0 & 0.528 & 0.537\\
+\addlinespace
+Gaussian (nonlin) & 731.9 & 0.375 & 142.7 & 0.529 & 0.534\\
+Gaussian (lin) & - & - & 142.5 & 0.530 & 0.536\\
+\addlinespace
+BCTM & 699.1 & 0.365 & 138.7 & 0.528 & 0.531\\
+DDPstar & 687.0 & 0.361 & 140.3 & 0.515 & -\\
+SBGP & 723.7 & 0.378 & 146.5 & 0.563 & -\\
+QGAM & - & 0.360 & - & 0.511 & -\\
+TAMLS & 702.2 & 0.362 & 139.4 & 0.510 & 0.530\\
+\bottomrule
+\end{tabu}

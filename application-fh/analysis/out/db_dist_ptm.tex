@@ -1,0 +1,11 @@
+
+\begin{tabu} to \linewidth {>{\raggedright\arraybackslash}p{3em}>{\raggedleft\arraybackslash}p{3em}>{\raggedleft\arraybackslash}p{3em}>{\raggedright}X>{\raggedleft}X>{\raggedleft}X}
+\toprule
+Model & a & b & $\lambda$ & Log Score $\downarrow$ & CRPS $\downarrow$\\
+\midrule
+PTM & -4 & 7 & $\lambda \to \infty$ & 625.70 & 0.366\\
+PTM & -4 & 7 & $\lambda = 0.1(b-a)$ & 625.70 & 0.366\\
+PTM & -4 & 4 & $\lambda \to \infty$ & 638.61 & 0.365\\
+PTM & -4 & 4 & $\lambda = 0.1(b-a)$ & 640.22 & 0.365\\
+\bottomrule
+\end{tabu}
