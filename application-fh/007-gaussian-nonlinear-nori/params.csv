@@ -1,0 +1,12 @@
+fold,thinning,posterior,warmup,sampling
+1,5,5000,5000,iwls-nuts
+2,5,5000,5000,iwls-nuts
+3,5,5000,5000,iwls-nuts
+4,5,5000,5000,iwls-nuts
+5,5,5000,5000,iwls-nuts
+6,5,5000,5000,iwls-nuts
+7,5,5000,5000,iwls-nuts
+8,5,5000,5000,iwls-nuts
+9,5,5000,5000,iwls-nuts
+10,5,5000,5000,iwls-nuts
+-1,5,5000,5000,iwls-nuts

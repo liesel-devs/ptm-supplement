@@ -1,0 +1,2 @@
+- Includes age and sex in X
+- uses approx_g=TRUE

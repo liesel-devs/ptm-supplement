@@ -1,0 +1,2 @@
+- Includes only sex in X, but not age
+- uses approx_g=FALSE

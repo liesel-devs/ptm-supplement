@@ -1,0 +1,12 @@
+fold,trafo_target_slope,thinning,posterior,warmup,sampling,a,b,nparam
+1,identity,5,2000,5000,iwls-nuts,-7,7,40
+2,identity,5,2000,5000,iwls-nuts,-7,7,40
+3,identity,5,2000,5000,iwls-nuts,-7,7,40
+4,identity,5,2000,5000,iwls-nuts,-7,7,40
+5,identity,5,2000,5000,iwls-nuts,-7,7,40
+6,identity,5,2000,5000,iwls-nuts,-7,7,40
+7,identity,5,2000,5000,iwls-nuts,-7,7,40
+8,identity,5,2000,5000,iwls-nuts,-7,7,40
+9,identity,5,2000,5000,iwls-nuts,-7,7,40
+10,identity,5,2000,5000,iwls-nuts,-7,7,40
+-1,identity,5,2000,5000,iwls-nuts,-7,7,40
