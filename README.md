@@ -87,8 +87,6 @@ jupyter notebook demos/framingham-heart-study.ipynb
 
 ### Windows Setup
 
-### Windows Setup
-
 #### Python 3.13
 
 To check your Python version, open **Command Prompt (cmd.exe)** or **PowerShell** and run:
