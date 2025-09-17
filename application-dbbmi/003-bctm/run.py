@@ -1,5 +1,5 @@
 """
-Installation::
+Installation of liesel_bctm::
 
     pip install https://github.com/liesel-devs/liesel-bctm.git
 """
