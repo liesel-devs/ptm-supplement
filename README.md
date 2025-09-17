@@ -32,7 +32,7 @@ data ("standardized conditional density").
 - `application-dbbmi/analysis` and `application-fh/analysis`: Data and code for all application-related analyses reported in the paper.
 
 
-## Set Up
+## Setup
 
 To run the demo notebooks, you need the following available:
 
