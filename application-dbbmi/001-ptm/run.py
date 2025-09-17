@@ -34,7 +34,6 @@ if args.testing:
     THINNING = 1
     WARMUP = 200
     POSTERIOR = 20
-    cache_path = Path(jobdir) / "results.pickle"
 
 finished = Path(jobdir) / "finished"
 finished.mkdir(parents=True, exist_ok=True)
