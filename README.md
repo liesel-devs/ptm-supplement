@@ -101,8 +101,8 @@ source .venv/bin/activate
 Now install the required packages via:
 
 ```
-pip install git+https://github.com/liesel-devs/liesel.git
-pip install git+https://github.com/liesel-devs/liesel-ptm.git
+pip install pkg/liesel-0.4.2.dev0.tar.gz
+pip install pkg/liesel_ptm-0.1.0.tar.gz
 pip install ipykernel jupyter
 ```
 
@@ -179,8 +179,8 @@ If successful, your prompt will change and show something like:
 Now install the required packages:
 
 ```
-pip install git+https://github.com/liesel-devs/liesel.git
-pip install git+https://github.com/liesel-devs/liesel-ptm.git
+pip install pkg/liesel-0.4.2.dev0.tar.gz
+pip install pkg/liesel_ptm-0.1.0.tar.gz
 pip install ipykernel jupyter
 ```
 
