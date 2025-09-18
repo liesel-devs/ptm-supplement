@@ -4,6 +4,9 @@ This repository contains code and illustrations for the following paper:
 
 Brachem, J., Wiemann, P. F. V., & Kneib, T. (2024). Bayesian penalized transformation models: Structured additive location-scale regression for arbitrary conditional distributions (No. arXiv:2404.07440). arXiv. https://doi.org/10.48550/arXiv.2404.07440
 
+- A Python library for PTMs is available on GitHub: https://github.com/liesel-devs/liesel-ptm 
+- Documentation for the library is available via https://liesel-devs.github.io/liesel-ptm/
+
 >Penalized transformation models (PTMs) are a semiparametric location–scale regression
 family that estimate a response’s conditional distribution directly from the data, and model
 the location and scale through structured additive predictors. The core of the model is a
