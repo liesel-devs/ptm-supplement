@@ -41,8 +41,8 @@ To run the demo notebooks, you need the following available:
 
 1. A working installation of Python 3.13 or newer
 2. A Python environment, ideally a virtual environment, with the following packages installed:
-    - `liesel` development version from the current GitHub main branch
-    - `liesel_ptm` from the current GitHub main branch
+    - `liesel` v0.4.3 or newer
+    - `liesel_ptm` v0.1.1 (see `pkg/liesel_ptm-0.1.0.tar.gz`)
     - `ipykernel` (for running a jupyter notebook)
     - `jupyter` (for running a jupyter notebook)
 
@@ -104,9 +104,9 @@ source .venv/bin/activate
 Now install the required packages via:
 
 ```
-pip install pkg/liesel-0.4.2.dev0.tar.gz
+pip install liesel ipykernel jupyter
+pip install pkg/liesel_gam-0.0.5.tar
 pip install pkg/liesel_ptm-0.1.0.tar.gz
-pip install ipykernel jupyter
 ```
 
 #### Launch Jupyter Notebook
@@ -182,9 +182,9 @@ If successful, your prompt will change and show something like:
 Now install the required packages:
 
 ```
-pip install pkg/liesel-0.4.2.dev0.tar.gz
+pip install liesel ipykernel jupyter
+pip install pkg/liesel_gam-0.0.5.tar
 pip install pkg/liesel_ptm-0.1.0.tar.gz
-pip install ipykernel jupyter
 ```
 
 
