@@ -1,1 +1,4 @@
 .DS_Store
+simulation/analysis/data/loc_samples_summary.csv
+simulation/analysis/data/scale_samples_summary.csv
+simulation/analysis/data/r_dens_summary_samples.csv
