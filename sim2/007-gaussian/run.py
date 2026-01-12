@@ -14,12 +14,9 @@ import liesel_ptm as ptm
 import numpy as np
 import pandas as pd
 import smoothcon as sc
-import tensorflow_probability.substrates.jax.bijectors as tfb
 from liesel.contrib.splines import equidistant_knots
 
-jax.config.update("jax_enable_x64", True)
-
-model = "ptm-iwls-nuts"
+model = "gaussian-iwls"
 
 
 @click.command()
@@ -50,12 +47,10 @@ model = "ptm-iwls-nuts"
     "--jobdir",
     type=str,
     required=True,
-    default="simulation/008-ptm",
+    default="sim2/007-gaussian",
 )
 @click.option("--jobrow", type=int, required=True, default=0)
-@click.option("--mcmc_strategy", type=str, required=True, default="iwls_fixed")
-@click.option("--testing", type=bool, required=True, default=False)
-@click.option("--apply_jitter", type=bool, required=True, default=False)
+@click.option("--thinning", type=int, required=True, default=10)
 def run_one(
     data_seed,
     data_type,
@@ -66,35 +61,17 @@ def run_one(
     jobid,
     jobdir,
     jobrow,
-    mcmc_strategy,
-    testing,
-    apply_jitter,
+    thinning,
 ):
-    thinning = 1
-    match mcmc_strategy:
-        case "iwls_fixed" | "iwls-iwls_fixed":
-            thinning = 10
-        case "iwls-nuts":
-            thinning = 5
-
-    if testing:
-        thinning = 1
-
     sys.path.append(jobdir)
     import utils
 
     logger = logging.getLogger(Path(jobdir).name)
     logger.setLevel(logging.INFO)
     sh = logging.StreamHandler()
-    sh.setLevel(logging.DEBUG)
+    sh.setLevel(logging.INFO)
     sh.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
-    if not logger.handlers:
-        logger.addHandler(sh)
-
-    lptm_logger = logging.getLogger("liesel_ptm")
-    lptm_logger.setLevel(logging.DEBUG)
-    if not lptm_logger.handlers:
-        lptm_logger.addHandler(sh)
+    logger.addHandler(sh)
 
     finished = Path(jobdir) / "finished"
     finished.mkdir(parents=True, exist_ok=True)
@@ -133,36 +110,10 @@ def run_one(
     # ---- Model ----
     # ..............................................................................
 
-    a = -4.0
-    b = 4.0
-    nparam = 30
-    knots = ptm.LogIncKnots(a, b, nparam=nparam)
-    mod = ptm.LocScalePTM(
+    mod = ptm.LocScalePTM.new_gaussian(
         response=train["y"].to_numpy(),
-        knots=knots.knots,
-        intercepts="pseudo_sample",
-        to_float32=False,
-    )
-
-    trafo_scale = ptm.ScaleWeibull(
-        value=1.0,
-        scale=0.5,
-        name="trafo0_scale",
-        bijector=tfb.Exp(),
-    )
-
-    logger.warning(f"{trafo_scale.name}: {trafo_scale.value}")
-    logger.warning(
-        f"{trafo_scale.variance_param.name}: {trafo_scale.variance_param.value}"
-    )
-    logger.warning(
-        f"{trafo_scale.variance_param.value_node[0].name}: {trafo_scale.variance_param.value_node[0].value}"
-    )
-
-    mod.trafo += ptm.PTMCoef.new_rw1_sumzero(
-        knots=knots.knots,
-        scale=trafo_scale,
-        name="trafo0",
+        loc_intercept_inference=gs.MCMCSpec(gs.IWLSKernel),
+        scale_intercept_inference=gs.MCMCSpec(gs.IWLSKernel),
     )
 
     xknots = np.asarray(equidistant_knots(jnp.array([-2.0, 2.0]), n_param=20))
@@ -187,8 +138,8 @@ def run_one(
             penalty=smooth.penalty,
             ig_concentration=1.0,
             ig_scale=0.001,
-            name=f"s(x{i})",
             variance_value=10.0,
+            name=f"s(x{i})",
         )
 
         mod.scale += gam.SmoothTerm.new_ig(
@@ -196,24 +147,24 @@ def run_one(
             penalty=smooth.penalty,
             ig_concentration=1.0,
             ig_scale=0.001,
-            name=f"g(x{i})",
             variance_value=10.0,
+            name=f"g(x{i})",
         )
 
-    logger.info("Building model")
     mod.build()
-    # mod.graph.plot_vars(save_path=str(Path(jobdir) / "mod.png"), width=20, height=12)
 
     # ..............................................................................
     # ---- Pre-optimization ----
     # ..............................................................................
 
-    logger.info("Initialization")
-    v = mod.graph.vars["trafo0_scale"].variance_param.value_node[0]
-    logger.warning(f"Value of {v.name}: {v.value}")
     mod.initialize(
         stopper=gs.Stopper(max_iter=5_000, patience=50),
         test_for_positive_definiteness=True,
+    )
+
+    mod.setup_default_mcmc_kernels(
+        strategy="iwls-nuts",
+        locscale_kernel_kwargs={"initial_step_size": 1.0, "da_target_accept": 0.8},
     )
 
     # ..............................................................................
@@ -228,26 +179,12 @@ def run_one(
         posterior=thinning * posterior,
         thinning_posterior=thinning,
         num_chains=4,
-        strategy=mcmc_strategy,
+        strategy="manual",
         warm_start=False,
-        apply_jitter=apply_jitter,
+        apply_jitter=False,
+        # cache_path=Path(jobdir) / "results.pickle",
     )
     toc = time.time()
-
-    aprobs_list = []
-    tinfos = results.get_posterior_transition_infos()
-    for param in mod.graph.parameters:
-        kernel = results.kernels_by_pos_key.expect(None)[param]
-        aprob = tinfos[kernel].acceptance_prob.mean()
-        posmoved = tinfos[kernel].position_moved.mean()
-        aprobs_dict = {}
-        aprobs_dict["acceptance_prob"] = aprob
-        aprobs_dict["position_moved"] = posmoved
-        aprobs_dict["kernel"] = results.kernel_classes.expect(None)[kernel].__name__
-        aprobs_dict["variable"] = param
-        aprobs_list.append(aprobs_dict)
-
-    aprobs_summary = pd.DataFrame(aprobs_list)
 
     samples = results.get_posterior_samples()
 
@@ -276,8 +213,6 @@ def run_one(
     diagnostics["ess_tail_min_per_minute"] = diagnostics["ess_tail_min"] / minutes
     diagnostics["ess_bulk_median_per_minute"] = diagnostics["ess_bulk_median"] / minutes
     diagnostics["ess_tail_median_per_minute"] = diagnostics["ess_tail_median"] / minutes
-
-    diagnostics = pd.merge(diagnostics, aprobs_summary, how="left")
 
     # ..............................................................................
     # ---- KLD and log score on test data ----
@@ -309,7 +244,6 @@ def run_one(
     # ..............................................................................
 
     logger.info("CRPS")
-    meval = ptm.EvaluatePTM(mod, samples)
     key, subkey = jax.random.split(key)
     crps = meval.crps(
         probs=jnp.linspace(0.005, 0.995, 25),
@@ -344,22 +278,11 @@ def run_one(
     # ---- Location shift on test data ----
     # ..............................................................................
 
-    newdata = {}
-    newdata["response"] = test["y"].to_numpy()
-    for i in range(4):
-        smooth = smooths[i]
-        newdata[f"B(x{i})"] = smooth(test[f"x{i}"].to_numpy())  # type: ignore
-
     logger.info("Meanfuns")
     meanfuns_summary = pd.concat(
         [
             utils.eval_covariate_simple(
-                "s",
-                i,
-                scale=False,
-                newdata=newdata,
-                test=test,
-                samples=samples,
+                "s", i, scale=False, newdata=newdata, test=test, samples=samples
             )
             for i in range(4)
         ],
@@ -374,12 +297,7 @@ def run_one(
     scalefuns_summary = pd.concat(
         [
             utils.eval_covariate_simple(
-                "g",
-                i,
-                scale=False,
-                newdata=newdata,
-                test=test,
-                samples=samples,
+                "g", i, scale=False, newdata=newdata, test=test, samples=samples
             )
             for i in range(4)
         ],
@@ -409,8 +327,6 @@ def run_one(
     dist_summary["fit_seconds"] = toc - tic
     dist_summary["job"] = job
     dist_summary["run"] = tid
-    dist_summary["mcmc_strategy"] = mcmc_strategy
-    dist_summary["apply_jitter"] = apply_jitter
 
     covariates_summary["data_type"] = data_type
     covariates_summary["data_seed"] = data_seed
@@ -419,8 +335,6 @@ def run_one(
     covariates_summary["ntest"] = ntest
     covariates_summary["job"] = job
     covariates_summary["run"] = tid
-    covariates_summary["mcmc_strategy"] = mcmc_strategy
-    covariates_summary["apply_jitter"] = apply_jitter
 
     errors["data_type"] = data_type
     errors["data_seed"] = data_seed
@@ -429,8 +343,6 @@ def run_one(
     errors["ntest"] = ntest
     errors["job"] = job
     errors["run"] = tid
-    errors["mcmc_strategy"] = mcmc_strategy
-    errors["apply_jitter"] = apply_jitter
 
     diagnostics["data_type"] = data_type
     diagnostics["data_seed"] = data_seed
@@ -439,8 +351,6 @@ def run_one(
     diagnostics["ntest"] = ntest
     diagnostics["job"] = job
     diagnostics["run"] = tid
-    diagnostics["mcmc_strategy"] = mcmc_strategy
-    diagnostics["apply_jitter"] = apply_jitter
 
     # ..............................................................................
     # ---- Write results to disk ----
@@ -450,9 +360,13 @@ def run_one(
 
     fp_dist = out_path_dist / ("dist-" + identifier)
     fp_covariates = out_path_covariates / ("covariates-" + identifier)
+    fp_covariates_unscaled = (
+        out_path / "covariates_unscaled" / ("covariates-" + identifier)
+    )
     fp_diagnostics = out_path / "diagnostics" / ("diagnostics-" + identifier)
     fp_errors = out_path_errors / ("errors-" + identifier)
 
+    fp_covariates_unscaled.parent.mkdir(exist_ok=True, parents=True)
     fp_diagnostics.parent.mkdir(exist_ok=True, parents=True)
 
     dist_summary.to_csv(fp_dist, index=False)

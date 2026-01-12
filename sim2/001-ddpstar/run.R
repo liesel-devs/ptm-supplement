@@ -540,7 +540,7 @@ option_list <- list(
     "--jobdir",
     type = "character",
     help = "Job Directory",
-    default = "simulation/001-ddpstar"
+    default = "sim2/001-ddpstar"
   ),
   make_option(
     "--jobrow",

@@ -41,7 +41,7 @@ model = "bctm-locshift"
     "--jobdir",
     type=str,
     required=True,
-    default="simulation/004-bctm-locshift",
+    default="sim2/004-bctm-locshift",
 )
 @click.option("--jobrow", type=int, required=True, default=0)
 def run_one(

@@ -12,7 +12,7 @@ out_dir <- path(current_dir, "..", "out")
 dir_create(out_dir)
 
 # Please download the data first via the instructions in
-# simulation/data/README.md
+# sim2/data/README.md
 df <- read_csv(path(
   current_dir,
   "..",

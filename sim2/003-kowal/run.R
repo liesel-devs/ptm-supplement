@@ -66,7 +66,7 @@ option_list <- list(
     "--jobdir",
     type = "character",
     help = "Job Directory",
-    default = "simulation/003-kowal"
+    default = "sim2/003-kowal"
   )
 )
 

@@ -50,7 +50,7 @@ model = "ptm-iwls-nuts"
     "--jobdir",
     type=str,
     required=True,
-    default="simulation/010-ptm-plots",
+    default="sim2/008-ptm",
 )
 @click.option("--jobrow", type=int, required=True, default=0)
 @click.option("--mcmc_strategy", type=str, required=True, default="iwls_fixed")
@@ -202,6 +202,7 @@ def run_one(
 
     logger.info("Building model")
     mod.build()
+    # mod.graph.plot_vars(save_path=str(Path(jobdir) / "mod.png"), width=20, height=12)
 
     # ..............................................................................
     # ---- Pre-optimization ----
@@ -233,7 +234,58 @@ def run_one(
     )
     toc = time.time()
 
+    aprobs_list = []
+    tinfos = results.get_posterior_transition_infos()
+    for param in mod.graph.parameters:
+        kernel = results.kernels_by_pos_key.expect(None)[param]
+        aprob = tinfos[kernel].acceptance_prob.mean()
+        posmoved = tinfos[kernel].position_moved.mean()
+        aprobs_dict = {}
+        aprobs_dict["acceptance_prob"] = aprob
+        aprobs_dict["position_moved"] = posmoved
+        aprobs_dict["kernel"] = results.kernel_classes.expect(None)[kernel].__name__
+        aprobs_dict["variable"] = param
+        aprobs_list.append(aprobs_dict)
+
+    aprobs_summary = pd.DataFrame(aprobs_list)
+
     samples = results.get_posterior_samples()
+
+    summary = gs.Summary(results)
+    errors = summary.error_df().reset_index()
+
+    diagnostics = (
+        summary.to_dataframe()
+        .reset_index()
+        .loc[:, ["variable", "rhat", "ess_bulk", "ess_tail"]]
+        .groupby("variable", as_index=False)
+        .agg(
+            ess_bulk_min=("ess_bulk", "min"),
+            ess_bulk_median=("ess_bulk", "median"),
+            ess_tail_min=("ess_tail", "min"),
+            ess_tail_median=("ess_tail", "median"),
+            rhat_max=("rhat", "max"),
+            rhat_median=("rhat", "median"),
+        )
+    )
+
+    seconds = toc - tic
+    minutes = seconds / 60
+
+    diagnostics["ess_bulk_min_per_minute"] = diagnostics["ess_bulk_min"] / minutes
+    diagnostics["ess_tail_min_per_minute"] = diagnostics["ess_tail_min"] / minutes
+    diagnostics["ess_bulk_median_per_minute"] = diagnostics["ess_bulk_median"] / minutes
+    diagnostics["ess_tail_median_per_minute"] = diagnostics["ess_tail_median"] / minutes
+
+    diagnostics = pd.merge(diagnostics, aprobs_summary, how="left")
+
+    # ..............................................................................
+    # ---- KLD and log score on test data ----
+    # ..............................................................................
+
+    logger.info("KLD and Log score")
+    newdata = test.loc[:, ["y", "x0", "x1", "x2", "x3"]].to_dict("list")
+    newdata = {k: jnp.asarray(v) for k, v in newdata.items()}
 
     newdata = {}
     newdata["response"] = test["y"].to_numpy()
@@ -241,72 +293,106 @@ def run_one(
         smooth = smooths[i]
         newdata[f"B(x{i})"] = smooth(test[f"x{i}"].to_numpy())  # type: ignore
 
+    meval = ptm.EvaluatePTM(mod, samples)  # type: ignore
+
+    kld = meval.kld(test["log_pdf"].to_numpy(), newdata=newdata.copy())
+    log_score = meval.log_score(newdata=newdata.copy())
+
+    # ..............................................................................
+    # ---- WAIC ----
+    # ..............................................................................
+    logger.info("WAIC")
+    waic = float(meval.waic()["waic_deviance"].iloc[0])
+
+    # ..............................................................................
+    # ---- CRPS on test data ----
+    # ..............................................................................
+
+    logger.info("CRPS")
+    meval = ptm.EvaluatePTM(mod, samples)
     key, subkey = jax.random.split(key)
-    rgrid = jnp.linspace(min(test["r"].min(), -4.0), max(test["r"].max(), 4.0), 150)
-    r_dens_summary_samples = mod.summarise_trafo_by_samples(
-        key=subkey,
-        grid=rgrid,
-        samples=samples,
-        n=50,
-    )
+    crps = meval.crps(
+        probs=jnp.linspace(0.005, 0.995, 25),
+        newdata=newdata | test["y"].to_numpy(),
+        k=20,
+    ).mean()
 
-    r_dens_summary = mod.summarise_dist(
-        samples=samples,
-        loc=0.0,
-        scale=1.0,
-        grid=rgrid,
-    )
+    # ..............................................................................
+    # ---- MAD on test data ----
+    # ..............................................................................
+    logger.info("MAD")
+    cdf_mad, coverage, width = utils.cdf_mad_and_ci_stream(mod, samples, newdata, test)
 
-    r_dens_summary_df = pd.DataFrame(
-        {"pdf_hat": r_dens_summary["prob"].mean(axis=(0, 1))}
+    # ..............................................................................
+    # ---- Summary of distribution analysis ----
+    # ..............................................................................
+
+    dist_summary = pd.DataFrame(
+        {
+            "waic": waic,
+            "kld": kld,
+            "log_score": log_score,
+            "crps": crps,
+            "cdf_mad": cdf_mad,
+            "cdf_ci_coverage": coverage,
+            "cdf_ci_width": width,
+        },
+        index=[0],  # type: ignore
     )
-    r_dens_summary_df["low"] = jnp.quantile(r_dens_summary["prob"], 0.05, axis=(0, 1))
-    r_dens_summary_df["high"] = jnp.quantile(r_dens_summary["prob"], 0.95, axis=(0, 1))
-    r_dens_summary_df["r"] = rgrid
 
     # ..............................................................................
     # ---- Location shift on test data ----
     # ..............................................................................
 
     newdata = {}
+    newdata["response"] = test["y"].to_numpy()
     for i in range(4):
         smooth = smooths[i]
-        newdata[f"B(x{i})"] = smooth(test[f"x{i}"].to_numpy()[:100])  # type: ignore
+        newdata[f"B(x{i})"] = smooth(test[f"x{i}"].to_numpy())  # type: ignore
 
     logger.info("Meanfuns")
-
-    loc_dfs = [
-        utils.covariate_df(
-            "s",
-            i,
-            scale=False,
-            newdata=newdata,
-            test=test.iloc[:100, :],
-            samples=samples,
-        )
-        for i in range(4)
-    ]
-    loc_summary = pd.concat([tup[0] for tup in loc_dfs], ignore_index=True)
-    loc_samples_summary = pd.concat([tup[1] for tup in loc_dfs], ignore_index=True)
+    meanfuns_summary = pd.concat(
+        [
+            utils.eval_covariate_simple(
+                "s",
+                i,
+                scale=False,
+                newdata=newdata,
+                test=test,
+                samples=samples,
+            )
+            for i in range(4)
+        ],
+        ignore_index=True,
+    )
 
     # ..............................................................................
     # ---- Scaling on test data ----
     # ..............................................................................
 
     logger.info("Scalefuns")
-    scale_dfs = [
-        utils.covariate_df(
-            "g",
-            i,
-            scale=False,
-            newdata=newdata,
-            test=test.iloc[:100, :],
-            samples=samples,
-        )
-        for i in range(4)
-    ]
-    scale_summary = pd.concat([tup[0] for tup in scale_dfs], ignore_index=True)
-    scale_samples_summary = pd.concat([tup[1] for tup in scale_dfs], ignore_index=True)
+    scalefuns_summary = pd.concat(
+        [
+            utils.eval_covariate_simple(
+                "g",
+                i,
+                scale=False,
+                newdata=newdata,
+                test=test,
+                samples=samples,
+            )
+            for i in range(4)
+        ],
+        ignore_index=True,
+    )
+
+    covariates_summary = pd.concat(
+        [
+            meanfuns_summary,
+            scalefuns_summary,
+        ],
+        axis=0,
+    )
 
     # ..............................................................................
     # ---- Save run information ----
@@ -315,31 +401,64 @@ def run_one(
     job = Path(jobdir).name
     tid = datetime.now().strftime("%Y%m%d-%H%M%S")
 
-    summaries = {
-        "r_dens_summary": r_dens_summary_df,
-        "r_dens_summary_samples": r_dens_summary_samples,
-        "loc_summary": loc_summary,
-        "loc_samples_summary": loc_samples_summary,
-        "scale_summary": scale_summary,
-        "scale_samples_summary": scale_samples_summary,
-    }
+    dist_summary["data_type"] = data_type
+    dist_summary["data_seed"] = data_seed
+    dist_summary["model"] = model
+    dist_summary["ntrain"] = ntrain
+    dist_summary["ntest"] = ntest
+    dist_summary["fit_seconds"] = toc - tic
+    dist_summary["job"] = job
+    dist_summary["run"] = tid
+    dist_summary["mcmc_strategy"] = mcmc_strategy
+    dist_summary["apply_jitter"] = apply_jitter
 
-    for name, summary in summaries.items():
-        summary["data_type"] = data_type
-        summary["data_seed"] = data_seed
-        summary["model"] = model
-        summary["ntrain"] = ntrain
-        summary["ntest"] = ntest
-        summary["fit_seconds"] = toc - tic
-        summary["job"] = job
-        summary["run"] = tid
-        summary["mcmc_strategy"] = mcmc_strategy
-        summary["apply_jitter"] = apply_jitter
-        identifier = f"{model}-{data_type}-{data_seed:03d}-n{ntrain}.csv"
-        out_path_df = out_path / name
-        out_path_df.mkdir(exist_ok=True, parents=True)
-        fp = out_path_df / (name + "-" + identifier)
-        summary.to_csv(fp, index=False)
+    covariates_summary["data_type"] = data_type
+    covariates_summary["data_seed"] = data_seed
+    covariates_summary["model"] = model
+    covariates_summary["ntrain"] = ntrain
+    covariates_summary["ntest"] = ntest
+    covariates_summary["job"] = job
+    covariates_summary["run"] = tid
+    covariates_summary["mcmc_strategy"] = mcmc_strategy
+    covariates_summary["apply_jitter"] = apply_jitter
+
+    errors["data_type"] = data_type
+    errors["data_seed"] = data_seed
+    errors["model"] = model
+    errors["ntrain"] = ntrain
+    errors["ntest"] = ntest
+    errors["job"] = job
+    errors["run"] = tid
+    errors["mcmc_strategy"] = mcmc_strategy
+    errors["apply_jitter"] = apply_jitter
+
+    diagnostics["data_type"] = data_type
+    diagnostics["data_seed"] = data_seed
+    diagnostics["model"] = model
+    diagnostics["ntrain"] = ntrain
+    diagnostics["ntest"] = ntest
+    diagnostics["job"] = job
+    diagnostics["run"] = tid
+    diagnostics["mcmc_strategy"] = mcmc_strategy
+    diagnostics["apply_jitter"] = apply_jitter
+
+    # ..............................................................................
+    # ---- Write results to disk ----
+    # ..............................................................................
+
+    identifier = f"{model}-{data_type}-{data_seed:03d}-n{ntrain}.csv"
+
+    fp_dist = out_path_dist / ("dist-" + identifier)
+    fp_covariates = out_path_covariates / ("covariates-" + identifier)
+    fp_diagnostics = out_path / "diagnostics" / ("diagnostics-" + identifier)
+    fp_errors = out_path_errors / ("errors-" + identifier)
+
+    fp_diagnostics.parent.mkdir(exist_ok=True, parents=True)
+
+    dist_summary.to_csv(fp_dist, index=False)
+    covariates_summary.to_csv(fp_covariates, index=False)
+    errors.to_csv(fp_errors, index=False)
+    diagnostics.to_csv(fp_diagnostics, index=False)
 
     finfile.touch()
 

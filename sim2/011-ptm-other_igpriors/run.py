@@ -50,7 +50,7 @@ model = "ptm-iwls-nuts"
     "--jobdir",
     type=str,
     required=True,
-    default="simulation/011-ptm-other_igpriors",
+    default="sim2/011-ptm-other_igpriors",
 )
 @click.option("--jobrow", type=int, required=True, default=0)
 @click.option("--mcmc_strategy", type=str, required=True, default="iwls_fixed")

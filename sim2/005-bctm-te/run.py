@@ -41,7 +41,7 @@ model = "bctm-te"
     "--jobdir",
     type=str,
     required=True,
-    default="simulation/005-bctm-te",
+    default="sim2/005-bctm-te",
 )
 @click.option("--jobrow", type=int, required=True, default=0)
 def run_one(

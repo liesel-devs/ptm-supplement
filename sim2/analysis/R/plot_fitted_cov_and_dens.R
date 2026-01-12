@@ -31,9 +31,9 @@ scale <- read_csv(path(data_dir, "scale_summary.csv"))
 r_dens <- read_csv(path(data_dir, "r_dens_summary.csv"))
 
 # the _samples datasets are quite large (>500mb in total), so they are available
-# as a .zip file: `simulation/analysis/data/samples_datasets.zip`.
+# as a .zip file: `sim2/analysis/data/samples_datasets.zip`.
 # Please unpack this .zip file and place the files in the
-# `simulation/analysis/data` directory
+# `sim2/analysis/data` directory
 # to import these datasets.
 loc_samples <- read_csv(path(data_dir, "loc_samples_summary.csv"))
 scale_samples <- read_csv(path(data_dir, "scale_samples_summary.csv"))

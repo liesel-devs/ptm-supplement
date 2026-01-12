@@ -1,6 +1,6 @@
 .DS_Store
-simulation/analysis/data/loc_samples_summary.csv
-simulation/analysis/data/scale_samples_summary.csv
-simulation/analysis/data/r_dens_summary_samples.csv
-simulation/analysis/out
+sim2/analysis/data/loc_samples_summary.csv
+sim2/analysis/data/scale_samples_summary.csv
+sim2/analysis/data/r_dens_summary_samples.csv
+sim2/analysis/out
 sim1/out
