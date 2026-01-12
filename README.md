@@ -33,6 +33,7 @@ data ("standardized conditional density").
 - `demos/framingham-heart-study.ipynb`: An illustrative jupyter notebook, showcasing the application of a PTM to the fourth dutch growth study.
 - `application-dbbmi/` and `application-fh/`: R and Python code for the application comparisons reported in the paper. Instructions for running this code are included at the end of this readme.
 - `application-dbbmi/analysis` and `application-fh/analysis`: Data and code for all application-related analyses reported in the paper.
+- `simulation`: Code for the main simulation study reported in the paper. The synthetic data for this study is available from Zenodo: https://doi.org/10.5281/zenodo.18202553
 
 
 ## Setup
@@ -221,3 +222,4 @@ renv::restore()
 ```
 
 See https://rstudio.github.io/renv/index.html for more information.
+
