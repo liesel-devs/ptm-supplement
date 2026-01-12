@@ -76,8 +76,8 @@ cat(diag_tab, file = path(out_dir, "sim2_diag.tex"))
 errors <- read_csv(path(data_dir, "errors.csv")) |>
   mutate(
     model = case_when(
-      str_detect(job, "ptm") & !str_detect(job, "nojitter") ~ "ptm-jitter",
-      str_detect(job, "ptm") & str_detect(job, "nojitter") ~ "ptm",
+      str_detect(job, "ptm") & !str_detect(job, "jitter") ~ "ptm",
+      str_detect(job, "ptm") & str_detect(job, "jitter") ~ "ptm-jitter",
       TRUE ~ model
     )
   ) |>
