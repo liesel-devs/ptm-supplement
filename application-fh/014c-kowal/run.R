@@ -19,12 +19,6 @@ suppressPackageStartupMessages({
 option_list <- list(
   # parameters from params.csv
   make_option(
-    "--fold",
-    type = "integer",
-    metavar = "integer",
-    default = 1
-  ),
-  make_option(
     "--jobrow",
     type = "character",
     default = 1,
@@ -34,13 +28,19 @@ option_list <- list(
     "--jobdir",
     type = "character",
     help = "Job Directory",
-    default = "application-fh/015-kowal"
+    default = "application-fh/014-kowal"
+  ),
+  make_option(
+    "--testing",
+    type = "integer",
+    default = 1
   )
 )
 
 # Parse arguments
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
+opt$jobrow <- as.integer(opt$jobrow) + 1
 
 params <- read_csv(fs::path(opt$jobdir, "params.csv"))[opt$jobrow, ]
 
@@ -105,7 +105,7 @@ logfile <- fs::path(out_path_log, identifier)
 log_appender(appender_file(logfile))
 log_info("Run started.")
 
-plot(train$age, train$cholst)
+# plot(train$age, train$cholst)
 
 log_info("Starting to fit model.")
 tic()
@@ -129,6 +129,34 @@ log_info("Starting CRPS computation.")
 crps <- mean(crps_sample(test$cholst, t(m$post_ypred)))
 log_info("CRPS computation finished.")
 
+probs <- seq(0.005, 0.995, length.out = 25)
+
+pred <- apply(t(m$post_ypred), 1, quantile, probs = probs) |> t()
+
+qs <- 1:length(probs) |>
+  sapply(function(i) {
+    scoringutils::quantile_score(
+      test$bmi,
+      pred[, i, drop = FALSE],
+      probs[i],
+      weigh = TRUE
+    )
+  })
+crps_by_qs <- qs |> mean()
+
+weighted_qs <- 1:length(probs) |>
+  sapply(function(i) {
+    weight <- (2 * probs[i] - 1)^2
+    weight *
+      scoringutils::quantile_score(
+        test$bmi,
+        pred[, i, drop = FALSE],
+        probs[i],
+        weigh = TRUE
+      )
+  })
+quantile_crps <- mean(weighted_qs)
+
 
 # ..............................................................................
 # ---- Log Score on test data ----
@@ -137,79 +165,14 @@ log_info("CRPS computation finished.")
 log_score <- scoringRules::logs_sample(test$cholst, t(m$post_ypred)) |> sum()
 
 # ..............................................................................
-# ---- Quantile curves plot ----
-# ..............................................................................
-
-age_seq <- with(data, seq(min(age), max(age), length.out = 100))
-sex_seq <- rep(c(0, 1), each = length(age_seq))
-age_seq <- c(age_seq, age_seq)
-newdata <- data.frame(sex = sex_seq)
-
-log_info("Starting to fit model.")
-tic()
-m <- sbgp(
-  y = train$cholst,
-  locs = train$age,
-  X = cbind(1, train[, c("sex")]),
-  nsave = 5000,
-  emp_bayes = FALSE,
-  approx_g = FALSE,
-  locs_test = age_seq,
-  X_test = cbind(1, newdata)
-)
-timing <- toc(quiet = TRUE)
-log_info("Model fit complete.")
-
-probs <- c(0.01, 0.1, 0.25, 0.5, 0.75, 0.9, 0.99)
-pred <- apply(t(m$post_ypred), 1, quantile, probs = probs)
-
-predictions <- pred |>
-  t() |>
-  as_tibble() |>
-  mutate(i = row_number()) |>
-  mutate(age = age_seq) |>
-  mutate(sex = sex_seq) |>
-  pivot_longer(
-    -c(i, age, sex),
-    names_to = "alpha",
-    values_to = "predicted_quantile"
-  ) |>
-  mutate(alpha = str_remove(alpha, "%")) |>
-  mutate(alpha_num = as.numeric(alpha) * 0.01)
-
-
-p <- data |>
-  ggplot() +
-  geom_point(
-    aes(age, cholst),
-    alpha = 0.05
-  ) +
-  geom_line(
-    data = predictions,
-    aes(age, predicted_quantile, group = alpha, color = alpha_num),
-  ) +
-  geom_smooth(
-    data = predictions,
-    aes(age, predicted_quantile, group = alpha, color = alpha_num),
-    se = FALSE
-  ) +
-  facet_wrap(~sex) +
-  NULL
-p
-
-ggsave(fs::path(
-  img_path,
-  paste0("quantiles-", "fold", params$fold, ".png")
-))
-
-
-# ..............................................................................
 # ---- Summary of distribution analysis ----
 # ..............................................................................
 
 dist_summary <- tibble(
   crps,
-  log_score
+  log_score,
+  crps_by_qs_estimated = crps_by_qs,
+  quantile_crps_by_qs_estimated = quantile_crps
 )
 
 # ..............................................................................
@@ -263,6 +226,71 @@ for (i in seq_along(summaries)) {
 
   fs::dir_create(fs::path(out_path, name_))
   write_csv(summaries[[i]], fs::path(out_path, name_, identifier))
+
+  # ..............................................................................
+  # ---- Quantile curves plot ----
+  # ..............................................................................
+
+  age_seq <- with(data, seq(min(age), max(age), length.out = 100))
+  sex_seq <- rep(c(0, 1), each = length(age_seq))
+  age_seq <- c(age_seq, age_seq)
+  newdata <- data.frame(age = age_seq, sex = sex_seq)
+
+  log_info("Starting to fit model.")
+  tic()
+  m <- sbgp(
+    y = train$cholst,
+    locs = train$age,
+    X = cbind(1, train[, c("sex")]),
+    nsave = 5000,
+    emp_bayes = FALSE,
+    approx_g = FALSE,
+    locs_test = age_seq,
+    X_test = cbind(1, newdata)
+  )
+  timing <- toc(quiet = TRUE)
+  log_info("Model fit complete.")
+
+  probs <- c(0.01, 0.1, 0.25, 0.5, 0.75, 0.9, 0.99)
+  pred <- apply(t(m$post_ypred), 1, quantile, probs = probs)
+
+  predictions <- pred |>
+    t() |>
+    as_tibble() |>
+    mutate(i = row_number()) |>
+    mutate(age = age_seq) |>
+    mutate(sex = sex_seq) |>
+    pivot_longer(
+      -c(i, age, sex),
+      names_to = "alpha",
+      values_to = "predicted_quantile"
+    ) |>
+    mutate(alpha = str_remove(alpha, "%")) |>
+    mutate(alpha_num = as.numeric(alpha) * 0.01)
+
+  p <- data |>
+    ggplot() +
+    geom_point(
+      aes(age, cholst),
+      alpha = 0.05
+    ) +
+    geom_line(
+      data = predictions,
+      aes(age, predicted_quantile, group = alpha, color = alpha_num),
+    ) +
+    geom_smooth(
+      data = predictions,
+      aes(age, predicted_quantile, group = alpha, color = alpha_num),
+      se = FALSE
+    ) +
+    facet_wrap(~sex) +
+    NULL
+  p
+
+  ggsave(fs::path(
+    img_path,
+    paste0("quantiles-", "fold", params$fold, ".png")
+  ))
 }
 
 finished_path <- fs::path(opt$jobdir, "finished")
