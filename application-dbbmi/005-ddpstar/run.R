@@ -15,12 +15,6 @@ suppressPackageStartupMessages({
 option_list <- list(
   # parameters from params.csv
   make_option(
-    "--fold",
-    type = "integer",
-    metavar = "integer",
-    default = 1
-  ),
-  make_option(
     "--jobrow",
     type = "character",
     default = 1,
@@ -34,8 +28,8 @@ option_list <- list(
   ),
   make_option(
     "--testing",
-    type = "logical",
-    default = TRUE
+    type = "integer",
+    default = 1
   )
 )
 
@@ -47,6 +41,7 @@ NSKIP <- 10
 # Parse arguments
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
+opt$jobrow <- as.integer(opt$jobrow) + 1
 
 params <- read_csv(fs::path(opt$jobdir, "params.csv"))[opt$jobrow, ]
 
@@ -203,16 +198,37 @@ q <- aperm(pred$quantfun, c(2, 3, 1))
 ntest <- nrow(test)
 nMCMC <- dim(q)[1]
 quantile_scores <- matrix(NA, nrow = nMCMC, ncol = ntest)
+weighted_quantile_scores <- matrix(NA, nrow = nMCMC, ncol = ntest)
 for (j in 1:nMCMC) {
-  quantile_scores[j, ] <- scoringutils::quantile_score(
-    observed = test$bmi,
-    predicted = q[j, , ] |> t(),
-    quantile_level = probs,
-    weigh = TRUE
-  )
+  quantile_scores[j, ] <- 1:length(probs) |>
+    sapply(function(i) {
+      p = q[j, , ] |> t()
+      scoringutils::quantile_score(
+        test$bmi,
+        predicted = p[, i, drop = FALSE],
+        quantile_level = probs[i],
+        weigh = TRUE
+      )
+    }) |>
+    rowMeans()
+
+  weighted_quantile_scores[j, ] <- 1:length(probs) |>
+    sapply(function(i) {
+      p = q[j, , ] |> t()
+      weight <- (2 * probs[i] - 1)^2
+      weight *
+        scoringutils::quantile_score(
+          test$bmi,
+          predicted = p[, i, drop = FALSE],
+          quantile_level = probs[i],
+          weigh = TRUE
+        )
+    }) |>
+    rowMeans()
 }
 
 crps <- quantile_scores |> mean()
+quantile_crps <- weighted_quantile_scores |> mean()
 
 # ..............................................................................
 # ---- Quantile score ----
@@ -304,7 +320,8 @@ p <- data |>
 dist_summary <- tibble(
   crps,
   log_score,
-  waic
+  waic,
+  quantile_crps_by_qs = quantile_crps
 )
 
 # ..............................................................................
