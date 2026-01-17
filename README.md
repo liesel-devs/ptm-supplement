@@ -36,6 +36,7 @@ data ("standardized conditional density").
 - `sdprior`: Code, data and analysis scripts for the prior predictive simulations carried out for the scale-dependent prior.
 - `sim1`: Data and analysis scripts for the preliminary (unconditional) simulation studies reported in the paper. 
 - `sim2`: Code, data and analysis scripts for the main simulation study reported in the paper. The synthetic data for this study is available from Zenodo: https://doi.org/10.5281/zenodo.18202553
+- `scaling`: Code, data and analysis scripts for experiments on the scaling of runtime with increasing sample sizes reported in Section 4.2 and Figure 7 of the paper.
 
 
 ## Setup
