@@ -65,7 +65,7 @@ $ pip install -r requirements.txt
 
 Sometimes the installation of Jax, a key dependency of both liesel and liesel_ptm is tricky for Windows users. For help, please consider the Jax documentation: https://docs.jax.dev/en/latest/installation.html
 
-## Launch Jupyter Notebook
+## Launch Jupyter Notebooks
 
 Now you can launch and run the demo notebooks:
 
