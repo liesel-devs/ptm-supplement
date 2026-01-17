@@ -6,6 +6,7 @@ asttokens==3.0.1
 attrs==25.3.0
 blackjax==1.2.5
 certifi==2026.1.4
+cffi==2.0.0
 charset-normalizer==3.4.4
 chex==0.1.91
 click==8.3.1
@@ -42,6 +43,7 @@ jupyter-client==8.7.0
 jupyter-core==5.9.1
 kiwisolver==1.4.9
 liesel==0.4.3
+liesel-gam @ git+https://github.com/liesel-devs/liesel_gam.git@58d68322c22952db39720b91207c7a4ec27d16c1
 liesel-ptm @ git+https://github.com/liesel-devs/liesel-ptm.git@466a7f55864cc0a6034fcff79b826cf626d3ccd0
 lineax==0.0.8
 matplotlib==3.10.6
@@ -64,11 +66,15 @@ pexpect==4.9.0
 pillow==11.3.0
 platformdirs==4.5.1
 plotnine==0.15.0
+polars==1.37.1
+polars-runtime-32==1.37.1
 prompt-toolkit==3.0.52
 properscoring==0.1
 psutil==7.2.1
 ptyprocess==0.7.0
 pure-eval==0.2.3
+pyarrow==22.0.0
+pycparser==2.23
 pydot==4.0.1
 pygments==2.19.2
 pyparsing==3.2.4
@@ -79,10 +85,12 @@ pyzmq==27.1.0
 referencing==0.37.0
 requests==2.32.5
 rpds-py==0.30.0
+ryp==0.2.0
 scipy==1.16.2
 seaborn==0.13.2
 setuptools==80.9.0
 six==1.17.0
+smoothcon @ git+https://github.com/liesel-devs/smoothcon.git@604c7cd3258c318128537a812f34da934b12f513
 stack-data==0.6.3
 statsmodels==0.14.5
 tenacity==9.1.2
