@@ -35,16 +35,23 @@ option_list <- list(
   ),
   make_option(
     "--testing",
-    type = "logical",
-    default = TRUE
+    type = "integer",
+    default = 1
   )
 )
 
 # Parse arguments
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
+opt$jobrow <- as.integer(opt$jobrow) + 1
+
+print(opt$testing)
+print(opt$jobrow)
 
 params <- read_csv(fs::path(opt$jobdir, "params.csv"))[opt$jobrow, ]
+
+print(params$fold)
+print(params)
 
 
 out_path <- fs::path(opt$jobdir, "out")
@@ -80,11 +87,12 @@ if (ALL_DATA) {
   test <- data[1:2, ]
 }
 
+
 # --------------------------------------------------------------------------- #
 # model
 # --------------------------------------------------------------------------- #
 
-if (opt$testing) {
+if (opt$testing == 1) {
   probs <- seq(0.005, 0.995, length.out = 2)
   train <- train[1:200, ]
 } else {
@@ -113,8 +121,30 @@ fit_viz <- mgcViz::getViz(fit)
 # ..............................................................................
 
 pred <- sapply(fit_viz, predict, newdata = test)
-crps <- scoringutils::quantile_score(test$bmi, pred, probs, weigh = TRUE) |>
-  mean()
+qs <- 1:length(probs) |>
+  sapply(function(i) {
+    scoringutils::quantile_score(
+      test$bmi,
+      pred[, i, drop = FALSE],
+      probs[i],
+      weigh = TRUE
+    )
+  })
+crps <- qs |> mean()
+
+weighted_qs <- 1:length(probs) |>
+  sapply(function(i) {
+    weight <- (2 * probs[i] - 1)^2
+    weight *
+      scoringutils::quantile_score(
+        test$bmi,
+        pred[, i, drop = FALSE],
+        probs[i],
+        weigh = TRUE
+      )
+  })
+quantile_crps <- mean(weighted_qs)
+
 
 # ..............................................................................
 # ---- Quantile score ----
@@ -174,7 +204,8 @@ p <- data |>
 # ..............................................................................
 
 dist_summary <- tibble(
-  crps
+  crps,
+  quantile_crps_by_qs = quantile_crps
 )
 
 # ..............................................................................
