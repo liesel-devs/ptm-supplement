@@ -4,25 +4,24 @@ Installation of liesel_bctm::
     pip install https://github.com/liesel-devs/liesel-bctm.git
 """
 
-from pathlib import Path
-import pandas as pd
-import jax.numpy as jnp
+import argparse
+import logging
 import time
 from datetime import datetime
-import argparse
-import plotnine as p9
-import logging
-import tensorflow_probability.substrates.jax.distributions as tfd
-import properscoring as ps
+from pathlib import Path
 
-import liesel.goose as gs
 import jax
+import jax.numpy as jnp
+import liesel.goose as gs
 import liesel_bctm as bctm
-
-from liesel_ptm.waic import waic as waic_fn
-from liesel_ptm.var import ScaleInverseGamma
-from liesel_ptm.kernel import setup_simple_ig_gibbs
+import pandas as pd
+import plotnine as p9
+import properscoring as ps
+import tensorflow_probability.substrates.jax.distributions as tfd
 from liesel_ptm import cache_results, util
+from liesel_ptm.kernel import setup_simple_ig_gibbs
+from liesel_ptm.var import ScaleInverseGamma
+from liesel_ptm.waic import waic as waic_fn
 
 logger = logging.getLogger("sim")
 logger.setLevel(logging.INFO)
@@ -32,7 +31,7 @@ if not logger.handlers:
 parser = argparse.ArgumentParser()
 parser.add_argument("--jobdir", type=str, default="application-fh/009-bctm")
 parser.add_argument("--jobrow", type=int, default=0)
-parser.add_argument("--testing", type=bool, default=True)
+parser.add_argument("--testing", type=int, default=1)
 args, _ = parser.parse_known_args()
 
 
@@ -85,7 +84,7 @@ test = data[data["fold"] == params["fold"]]
 ALL_DATA = params["fold"] == -1
 if ALL_DATA:
     train = data
-    test = data.iloc[0, :]  # effectively no test data
+    test = data.iloc[0:2, :]  # effectively no test data
 
 
 # ..............................................................................
@@ -268,7 +267,12 @@ if "ri" in MODEL:
 # ..............................................................................
 # ---- CRPS ----
 # ..............................................................................
+logger.info("Computing CRPS")
 N_NEWSAMPLES_PER_POSTERIOR_SAMPLE_CRPS = 1
+N_SUBSAMPLES_CRPS = 1000
+subsamples = util.subsample_tree(
+    jax.random.key(params["fold"]), samples, num_samples=N_SUBSAMPLES_CRPS
+)
 
 if "ri" in MODEL:
     newid_basis_test = ctmb.pt[-1].basis_fn(test["newid"].to_numpy())
@@ -286,10 +290,11 @@ for i in range(ngrid):
         newdata["person_ri"] = subkey
     smooths_list.append(newdata)
 
+logger.info("Drawing predictive samples")
 pred_samples = bctm.summary.trafo_csample(
     key=jax.random.key(params["fold"]),
     n=N_NEWSAMPLES_PER_POSTERIOR_SAMPLE_CRPS,
-    samples=samples,
+    samples=subsamples,
     smooths_list=smooths_list,
     ygrid=ygrid,
     builder=ctmb,
@@ -330,7 +335,49 @@ def crps_streaming(pred_samples, observations, n_chunk):
     return jnp.mean(jnp.stack(crps_vals))
 
 
+logger.info("Computing streaming CRPS")
 crps = crps_streaming(pred_samples, test["cholst"].to_numpy(), 500)
+
+probs = jnp.linspace(0.005, 0.995, 25)
+pred_quantiles = jnp.quantile(pred_samples, probs, axis=0)
+
+
+def crps_fn(probs, obs, quantiles, quantile_weight_fn=lambda p: p):
+    """
+    obs is (n,)
+    quantiles is (n, probs)
+    """
+    from jax.scipy.integrate import trapezoid
+
+    quantiles = quantiles.T  # (probs, n)
+    response = obs
+
+    probs = jnp.reshape(probs, (jnp.shape(probs)[0], 1))
+    quantile_weights = quantile_weight_fn(probs)
+
+    probs = jnp.swapaxes(probs, 0, -1)
+    quantiles = jnp.swapaxes(quantiles, 0, -1)
+    quantile_weights = jnp.swapaxes(quantile_weights, 0, -1)
+
+    response_reshaped = jnp.reshape(response, (jnp.shape(response)[0], 1))
+
+    deviation = quantiles - response_reshaped
+    weight = 2 * (jnp.heaviside(deviation, 0.0) - probs)
+    quantile_score = weight * deviation * quantile_weights
+
+    crps_contributions = trapezoid(quantile_score, probs, axis=1)
+    return crps_contributions
+
+
+crps_fn = jax.jit(crps_fn, static_argnames="quantile_weight_fn")
+logger.info("Computing QS CRPS")
+crps_by_qs_estimated = crps_fn(
+    probs, test["cholst"].to_numpy(), pred_quantiles.T
+).mean()
+quantile_crps_by_qs_estimated = crps_fn(
+    probs, test["cholst"].to_numpy(), pred_quantiles.T, lambda p: (2 * p - 1) ** 2
+).mean()
+
 
 # ..............................................................................
 # ---- Summary of distribution analysis ----
@@ -340,6 +387,8 @@ dist_summary = pd.DataFrame(
     {
         "waic": waic,
         "crps": crps,
+        "crps_by_qs_estimated": crps_by_qs_estimated,
+        "quantile_crps_by_qs_estimated": quantile_crps_by_qs_estimated,
     },
     index=[0],  # type: ignore
 )
