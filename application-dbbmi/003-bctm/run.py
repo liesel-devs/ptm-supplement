@@ -4,24 +4,23 @@ Installation of liesel_bctm::
     pip install https://github.com/liesel-devs/liesel-bctm.git
 """
 
-from pathlib import Path
-import pandas as pd
-import jax.numpy as jnp
+import argparse
 import time
 from datetime import datetime
-import argparse
+from pathlib import Path
 
-import liesel.goose as gs
 import jax
+import jax.numpy as jnp
+import liesel.goose as gs
 import liesel_bctm as bctm
 import liesel_ptm as ptm
-
+import pandas as pd
 from liesel_ptm.waic import waic as waic_fn
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--jobdir", type=str, default="application-db/jobs/003-bctm")
+parser.add_argument("--jobdir", type=str, default="application-db/003-bctm")
 parser.add_argument("--jobrow", type=int, default=0)
-parser.add_argument("--testing", type=bool, default=True)
+parser.add_argument("--testing", type=int, default=1)
 args, _ = parser.parse_known_args()
 
 
@@ -142,7 +141,7 @@ warmup = slow_warmup_duration + init_duration + term_duration
 epochs = gs.stan_epochs(
     warmup_duration=warmup,
     posterior_duration=POSTERIOR,
-    thinning_posterior=1,
+    thinning_posterior=THINNING,
     thinning_warmup=1,
     init_duration=init_duration,
     term_duration=term_duration,
@@ -182,7 +181,6 @@ waic = float(waic["waic_deviance"].iloc[0])
 # ..............................................................................
 
 N_SUBSAMPLES_CRPS = min(POSTERIOR * 4, 1000)
-N_NEWSAMPLES_PER_POSTERIOR_SAMPLE_CRPS = 1
 
 subsamples = ptm.util.subsample_tree(
     jax.random.key(params["fold"]), samples, num_samples=N_SUBSAMPLES_CRPS
@@ -201,13 +199,24 @@ ypred_q = bctm.summary.trafo_cquantiles(
 )
 ypred_q = jnp.moveaxis(ypred_q, 0, -1)
 crps = bctm.summary.crps(test["bmi"].to_numpy(), ypred_q, probs)
+quantile_crps = bctm.summary.crps(
+    test["bmi"].to_numpy(),
+    ypred_q,
+    probs,
+    weight_fn=lambda alpha: (2 * alpha - 1) ** 2,
+)
 
 # ..............................................................................
 # ---- Summary of distribution analysis ----
 # ..............................................................................
 
 dist_summary = pd.DataFrame(
-    {"waic": waic, "log_score": log_score, "crps": crps},
+    {
+        "waic": waic,
+        "log_score": log_score,
+        "crps": crps,
+        "quantile_crps_by_qs": quantile_crps,
+    },
     index=[0],  # type: ignore
 )
 
