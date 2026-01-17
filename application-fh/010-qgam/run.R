@@ -16,12 +16,6 @@ suppressPackageStartupMessages({
 option_list <- list(
   # parameters from params.csv
   make_option(
-    "--fold",
-    type = "integer",
-    metavar = "integer",
-    default = 1
-  ),
-  make_option(
     "--jobrow",
     type = "character",
     default = 1,
@@ -34,15 +28,16 @@ option_list <- list(
     default = "application-fh/010-qgam"
   ),
   make_option(
-    "--model",
-    type = "character",
-    default = "default"
+    "--testing",
+    type = "integer",
+    default = 1
   )
 )
 
 # Parse arguments
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
+opt$jobrow <- as.integer(opt$jobrow) + 1
 
 params <- read_csv(fs::path(opt$jobdir, "params.csv"))[opt$jobrow, ]
 
@@ -124,8 +119,29 @@ fit_viz <- mgcViz::getViz(fit)
 # ..............................................................................
 
 pred <- sapply(fit_viz, predict, newdata = test)
-crps <- scoringutils::quantile_score(test$cholst, pred, probs, weigh = TRUE) |>
-  mean()
+qs <- 1:length(probs) |>
+  sapply(function(i) {
+    scoringutils::quantile_score(
+      test$cholst,
+      pred[, i, drop = FALSE],
+      probs[i],
+      weigh = TRUE
+    )
+  })
+crps <- qs |> mean()
+
+weighted_qs <- 1:length(probs) |>
+  sapply(function(i) {
+    weight <- (2 * probs[i] - 1)^2
+    weight *
+      scoringutils::quantile_score(
+        test$cholst,
+        pred[, i, drop = FALSE],
+        probs[i],
+        weigh = TRUE
+      )
+  })
+quantile_crps <- mean(weighted_qs)
 
 # ..............................................................................
 # ---- Quantile score ----
@@ -207,7 +223,8 @@ ggsave(fs::path(
 # ..............................................................................
 
 dist_summary <- tibble(
-  crps
+  crps,
+  quantile_crps_by_qs = quantile_crps
 )
 
 # ..............................................................................
