@@ -1,0 +1,45 @@
+kernel,error_code,error_msg,phase,count,sample_size,sample_size_total,relative,data_type,data_seed,model,ntrain,ntest,job,run,index,mcmc_strategy,apply_jitter
+kernel_00,1,divergent transition,warmup,44,4000,4000,0.01099999994039535,mixture,2,bctm-locshift,2000,5000,005-bctm-locshift,20260109-213150,NA,NA,NA
+kernel_00,1,divergent transition,posterior,19,8000,8000,0.00237499992363154,mixture,2,bctm-locshift,2000,5000,005-bctm-locshift,20260109-213150,NA,NA,NA
+kernel_00,2,maximum tree depth,warmup,464,4000,4000,0.11599999666213988,mixture,2,bctm-locshift,2000,5000,005-bctm-locshift,20260109-213150,NA,NA,NA
+kernel_00,2,maximum tree depth,posterior,600,8000,8000,0.07500000298023224,mixture,2,bctm-locshift,2000,5000,005-bctm-locshift,20260109-213150,NA,NA,NA
+kernel_00,1,divergent transition,warmup,37,4000,4000,0.00925000011920929,mixture,6,bctm-locshift,10000,5000,005-bctm-locshift,20260109-215909,NA,NA,NA
+kernel_00,1,divergent transition,posterior,0,8000,8000,0,mixture,6,bctm-locshift,10000,5000,005-bctm-locshift,20260109-215909,NA,NA,NA
+kernel_00,2,maximum tree depth,warmup,335,4000,4000,0.08375000208616257,mixture,6,bctm-locshift,10000,5000,005-bctm-locshift,20260109-215909,NA,NA,NA
+kernel_00,2,maximum tree depth,posterior,678,8000,8000,0.08475000411272049,mixture,6,bctm-locshift,10000,5000,005-bctm-locshift,20260109-215909,NA,NA,NA
+kernel_00,1,divergent transition,warmup,40,4000,4000,0.00999999977648258,mixture,11,bctm-locshift,20000,5000,005-bctm-locshift,20260109-223617,NA,NA,NA
+kernel_00,1,divergent transition,posterior,0,8000,8000,0,mixture,11,bctm-locshift,20000,5000,005-bctm-locshift,20260109-223617,NA,NA,NA
+kernel_00,2,maximum tree depth,warmup,320,4000,4000,0.07999999821186066,mixture,11,bctm-locshift,20000,5000,005-bctm-locshift,20260109-223617,NA,NA,NA
+kernel_00,2,maximum tree depth,posterior,356,8000,8000,0.04450000077486038,mixture,11,bctm-locshift,20000,5000,005-bctm-locshift,20260109-223617,NA,NA,NA
+kernel_00,1,divergent transition,warmup,61,4000,4000,0.01524999924004077,mixture,1,bctm-te,2000,5000,006-bctm-te,20260109-224425,NA,NA,NA
+kernel_00,1,divergent transition,posterior,38,8000,8000,0.00475000031292438,mixture,1,bctm-te,2000,5000,006-bctm-te,20260109-224425,NA,NA,NA
+kernel_00,2,maximum tree depth,warmup,3863,4000,4000,0.965749979019165,mixture,1,bctm-te,2000,5000,006-bctm-te,20260109-224425,NA,NA,NA
+kernel_00,2,maximum tree depth,posterior,7962,8000,8000,0.9952499866485596,mixture,1,bctm-te,2000,5000,006-bctm-te,20260109-224425,NA,NA,NA
+kernel_00,3,divergent transition + maximum tree depth,warmup,7,4000,4000,0.0017500000540167,mixture,1,bctm-te,2000,5000,006-bctm-te,20260109-224425,NA,NA,NA
+kernel_00,3,divergent transition + maximum tree depth,posterior,0,8000,8000,0,mixture,1,bctm-te,2000,5000,006-bctm-te,20260109-224425,NA,NA,NA
+kernel_00,1,divergent transition,warmup,54,4000,4000,0.01350000035017728,mixture,5,bctm-te,10000,5000,006-bctm-te,20260109-231430,NA,NA,NA
+kernel_00,1,divergent transition,posterior,0,8000,8000,0,mixture,5,bctm-te,10000,5000,006-bctm-te,20260109-231430,NA,NA,NA
+kernel_00,2,maximum tree depth,warmup,3895,4000,4000,0.9737499952316284,mixture,5,bctm-te,10000,5000,006-bctm-te,20260109-231430,NA,NA,NA
+kernel_00,2,maximum tree depth,posterior,8000,8000,8000,1,mixture,5,bctm-te,10000,5000,006-bctm-te,20260109-231430,NA,NA,NA
+kernel_00,3,divergent transition + maximum tree depth,warmup,9,4000,4000,0.00224999990314245,mixture,5,bctm-te,10000,5000,006-bctm-te,20260109-231430,NA,NA,NA
+kernel_00,3,divergent transition + maximum tree depth,posterior,0,8000,8000,0,mixture,5,bctm-te,10000,5000,006-bctm-te,20260109-231430,NA,NA,NA
+kernel_00,1,divergent transition,warmup,58,4000,4000,0.01449999958276748,mixture,10,bctm-te,20000,5000,006-bctm-te,20260110-002223,NA,NA,NA
+kernel_00,1,divergent transition,posterior,0,8000,8000,0,mixture,10,bctm-te,20000,5000,006-bctm-te,20260110-002223,NA,NA,NA
+kernel_00,2,maximum tree depth,warmup,3893,4000,4000,0.9732500314712524,mixture,10,bctm-te,20000,5000,006-bctm-te,20260110-002223,NA,NA,NA
+kernel_00,2,maximum tree depth,posterior,8000,8000,8000,1,mixture,10,bctm-te,20000,5000,006-bctm-te,20260110-002223,NA,NA,NA
+kernel_00,3,divergent transition + maximum tree depth,warmup,11,4000,4000,0.00274999998509883,mixture,10,bctm-te,20000,5000,006-bctm-te,20260110-002223,NA,NA,NA
+kernel_00,3,divergent transition + maximum tree depth,posterior,0,8000,8000,0,mixture,10,bctm-te,20000,5000,006-bctm-te,20260110-002223,NA,NA,NA
+kernel_00,1,divergent transition,warmup,68,4000,4000,0.01700000092387199,mixture,5,ptm-iwls-nuts,10000,5000,010-ptm,20260114-121954,NA,iwls-nuts,FALSE
+kernel_00,1,divergent transition,posterior,0,8000,8000,0,mixture,5,ptm-iwls-nuts,10000,5000,010-ptm,20260114-121954,NA,iwls-nuts,FALSE
+kernel_00,2,maximum tree depth,warmup,1137,4000,4000,0.2842499911785126,mixture,5,ptm-iwls-nuts,10000,5000,010-ptm,20260114-121954,NA,iwls-nuts,FALSE
+kernel_00,2,maximum tree depth,posterior,0,8000,8000,0,mixture,5,ptm-iwls-nuts,10000,5000,010-ptm,20260114-121954,NA,iwls-nuts,FALSE
+kernel_00,3,divergent transition + maximum tree depth,warmup,1,4000,4000,2.5000001187436e-4,mixture,5,ptm-iwls-nuts,10000,5000,010-ptm,20260114-121954,NA,iwls-nuts,FALSE
+kernel_00,3,divergent transition + maximum tree depth,posterior,0,8000,8000,0,mixture,5,ptm-iwls-nuts,10000,5000,010-ptm,20260114-121954,NA,iwls-nuts,FALSE
+kernel_00,1,divergent transition,warmup,63,4000,4000,0.01575000025331974,mixture,1,ptm-iwls-nuts,2000,5000,010-ptm,20260113-225025,NA,iwls-nuts,FALSE
+kernel_00,1,divergent transition,posterior,0,8000,8000,0,mixture,1,ptm-iwls-nuts,2000,5000,010-ptm,20260113-225025,NA,iwls-nuts,FALSE
+kernel_00,2,maximum tree depth,warmup,590,4000,4000,0.14750000834465027,mixture,1,ptm-iwls-nuts,2000,5000,010-ptm,20260113-225025,NA,iwls-nuts,FALSE
+kernel_00,2,maximum tree depth,posterior,0,8000,8000,0,mixture,1,ptm-iwls-nuts,2000,5000,010-ptm,20260113-225025,NA,iwls-nuts,FALSE
+kernel_00,1,divergent transition,warmup,63,4000,4000,0.01575000025331974,mixture,10,ptm-iwls-nuts,20000,5000,010-ptm,20260114-124146,NA,iwls-nuts,FALSE
+kernel_00,1,divergent transition,posterior,0,8000,8000,0,mixture,10,ptm-iwls-nuts,20000,5000,010-ptm,20260114-124146,NA,iwls-nuts,FALSE
+kernel_00,2,maximum tree depth,warmup,1251,4000,4000,0.3127500116825104,mixture,10,ptm-iwls-nuts,20000,5000,010-ptm,20260114-124146,NA,iwls-nuts,FALSE
+kernel_00,2,maximum tree depth,posterior,0,8000,8000,0,mixture,10,ptm-iwls-nuts,20000,5000,010-ptm,20260114-124146,NA,iwls-nuts,FALSE

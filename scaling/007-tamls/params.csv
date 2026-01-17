@@ -1,0 +1,4 @@
+data_seed,data_type,ntrain
+1,mixture,2000
+1,mixture,10000
+1,mixture,20000
