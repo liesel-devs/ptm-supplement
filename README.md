@@ -33,17 +33,19 @@ data ("standardized conditional density").
 - `demos/framingham-heart-study.ipynb`: An illustrative jupyter notebook, showcasing the application of a PTM to the fourth dutch growth study.
 - `application-dbbmi/` and `application-fh/`: R and Python code for the application comparisons reported in the paper. Instructions for running this code are included at the end of this readme.
 - `application-dbbmi/analysis` and `application-fh/analysis`: Data and code for all application-related analyses reported in the paper.
-- `simulation`: Code for the main simulation study reported in the paper. The synthetic data for this study is available from Zenodo: https://doi.org/10.5281/zenodo.18202553
+- `sdprior`: Code, data and analysis scripts for the prior predictive simulations carried out for the scale-dependent prior.
+- `sim1`: Data and analysis scripts for the preliminary (unconditional) simulation studies reported in the paper. 
+- `sim2`: Code, data and analysis scripts for the main simulation study reported in the paper. The synthetic data for this study is available from Zenodo: https://doi.org/10.5281/zenodo.18202553
 
 
 ## Setup
 
-To run the demo notebooks, you need the following available:
+To run the demo notebooks, you need the following setup:
 
 1. A working installation of Python 3.13 or newer
 2. A Python environment, ideally a virtual environment, with the following packages installed:
     - `liesel` v0.4.3 or newer
-    - `liesel_ptm` v0.1.1 (see `pkg/liesel_ptm-0.1.0.tar.gz`)
+    - `liesel_ptm` v0.1.1 (see `pkg/liesel_ptm-0.1.1.tar.gz`)
     - `ipykernel` (for running a jupyter notebook)
     - `jupyter` (for running a jupyter notebook)
 
