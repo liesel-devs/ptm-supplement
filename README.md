@@ -43,79 +43,31 @@ data ("standardized conditional density").
 
 To run the demo notebooks, you need the following setup:
 
-1. A working installation of Python 3.13 or newer
-2. A Python environment, ideally a virtual environment, with the following packages installed:
-    - `liesel` v0.4.3 or newer
-    - `liesel_ptm` v0.1.1 (see `pkg/liesel_ptm-0.1.1.tar.gz`)
-    - `ipykernel` (for running a jupyter notebook)
-    - `jupyter` (for running a jupyter notebook)
+1. A working installation of Python 3.13.x (Python 3.14 is not supported).
+2. A working installation of R.
 
-Sometimes the installation of Jax, a key dependency of both liesel and liesel_ptm is
-tricky. For help, consider: https://docs.jax.dev/en/latest/installation.html
+### Install R dependencies
 
-### MacOS Setup
-
-#### Python 3.13
-
-To check you Python version, run the follwing in a terminal:
+The R dependencies in this project are managed with [`{renv}`](https://rstudio.github.io/renv/articles/renv.html).
+In the project root directory, start an interactive R session; renv will then be initialized. Afterwards, install the R dependencies listed in `renv.lock` by running:
 
 ```
-python3.13 --version
+R> renv::restore()
 ```
 
-If that fails, install via Python 3.13 via Homebrew (see https://brew.sh):
+### Install Python dependencies
+
+The Python dependencies in this project are listed in `requirements.txt`. They can be installed by running the following commend in a terminal session in the project root directory:
 
 ```
-brew install python@3.13
+$ pip install -r requirements.txt
 ```
 
-Then verify success by running:
+Sometimes the installation of Jax, a key dependency of both liesel and liesel_ptm is tricky for Windows users. For help, please consider the Jax documentation: https://docs.jax.dev/en/latest/installation.html
 
-```
-python3.13 --version
-```
+## Launch Jupyter Notebook
 
-#### Virtual Environment Setup
-
-
-First, make sure the working directory is the project directory:
-
-```
-pwd # prints working directory
-```
-
-If that is not the case, change to the project directory
-
-```
-cd /path/to/ptm-supplement
-```
-
-Now initialize a new virtual environment:
-
-```
-python3.13 -m venv .venv
-```
-
-Now activate the virtual environment:
-
-```
-source .venv/bin/activate
-```
-
-
-#### Install packages
-
-Now install the required packages via:
-
-```
-pip install liesel ipykernel jupyter
-pip install pkg/liesel_gam-0.0.5.tar
-pip install pkg/liesel_ptm-0.1.0.tar.gz
-```
-
-#### Launch Jupyter Notebook
-
-Now you can launch the demo notebooks:
+Now you can launch and run the demo notebooks:
 
 ```
 jupyter notebook demos/dutch-growth-study.ipynb
@@ -124,105 +76,3 @@ jupyter notebook demos/dutch-growth-study.ipynb
 ```
 jupyter notebook demos/framingham-heart-study.ipynb
 ```
-
-
-### Windows Setup
-
-#### Python 3.13
-
-To check your Python version, open **Command Prompt (cmd.exe)** or **PowerShell** and run:
-
-```
-py -3.13 --version
-```
-
-If that fails, try:
-
-```
-python --version
-```
-
-If neither works, download and install Python 3.13 from [python.org](https://www.python.org/downloads/).  
-During installation, make sure to check:
-- Add python.exe to PATH
-- Install py launcher
-
-Then verify success by running again:
-
-```
-py -3.13 --version
-```
-
-
-#### Virtual Environment Setup
-
-First, make sure you are in the project directory:
-
-```
-cd path\to\ptm-supplement
-```
-
-Now initialize a new virtual environment:
-
-```
-py -3.13 -m venv .venv
-```
-
-Now activate the virtual environment:
-
-```
-.venv\Scripts\activate
-```
-
-If successful, your prompt will change and show something like:
-
-```
-(.venv) C:\path\to\ptm-supplement>
-```
-
-
-#### Install packages
-
-Now install the required packages:
-
-```
-pip install liesel ipykernel jupyter
-pip install pkg/liesel_gam-0.0.5.tar
-pip install pkg/liesel_ptm-0.1.0.tar.gz
-```
-
-
-#### Launch Jupyter Notebook
-
-Now you can launch the demo notebooks:
-
-```
-jupyter notebook demos\dutch-growth-study.ipynb
-```
-
-```
-jupyter notebook demos\framingham-heart-study.ipynb
-```
-
-
-
-## Instructions for running application comparison code
-
-- Each application directory contains a subdirectory for each model.
-- Each of these directories contains a `launch.py`. This can script can be run to run the comparisons.
-- Note that, for most models, `launch.py` is called with `testing=True`, which will run the code with testing settings so that it finishes faster.
-- Each `run.R` and `run.py` is written such that it can also be run directly on its own, without going through `launch.py`.
-
-
-### Reproducible R environment
-
-This project uses `renv` to facilitate reproducibility of R packages. To obtain
-a reproducible R environment, please run:
-
-```r
-install.packages("renv")
-renv::restore()
-```
-
-See https://rstudio.github.io/renv/index.html for more information.
-
