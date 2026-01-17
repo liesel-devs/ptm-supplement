@@ -1,19 +1,21 @@
-from pathlib import Path
-import pandas as pd
-import jax.numpy as jnp
+import argparse
+import logging
 import time
 from datetime import datetime
-import argparse
+from pathlib import Path
 
+import jax
+import jax.numpy as jnp
 import liesel.goose as gs
 import liesel_ptm as ptm
+import pandas as pd
+import plotnine as p9
 from liesel_ptm import ps, term
-import jax
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--jobdir", type=str, default="application-dbbmi/002-gaussian")
 parser.add_argument("--jobrow", type=int, default=0)
-parser.add_argument("--testing", type=bool, default=True)
+parser.add_argument("--testing", type=int, default=1)
 args, _ = parser.parse_known_args()
 
 
@@ -34,7 +36,6 @@ if args.testing:
     THINNING = 1
     WARMUP = 200
     POSTERIOR = 20
-    cache_path = Path(jobdir) / "results.pickle"
 
 finished = Path(jobdir) / "finished"
 finished.mkdir(parents=True, exist_ok=True)
@@ -71,7 +72,7 @@ test = data[data["fold"] == params["fold"]]
 ALL_DATA = params["fold"] == -1
 if ALL_DATA:
     train = data
-    test = data.iloc[0, :]  # effectively no test data
+    test = data.iloc[[0], :]  # effectively no test data
 
 key = jax.random.key(params["fold"])
 
@@ -82,6 +83,7 @@ key = jax.random.key(params["fold"])
 mod = ptm.LocScalePTM.new_gaussian(
     response=train["bmi"].to_numpy(),
 )
+
 
 ps_age = ps(train["age"], nbases=20, xname="age")  # P-Spline basis
 mod.loc += term.f_ig(ps_age, ig_concentration=1.0, ig_scale=0.001, fname="s")
@@ -95,8 +97,8 @@ mod.build()
 # ..............................................................................
 
 # manual initialization step
-_ = mod.initialize(
-    stopper=gs.Stopper(max_iter=5_000, patience=50),
+res = mod.initialize(
+    stopper=gs.Stopper(max_iter=500, patience=10),
     test_for_positive_definiteness=True,
 )
 
@@ -109,6 +111,7 @@ results = mod.run_mcmc(
     seed=params["fold"],
     warmup=WARMUP,
     posterior=THINNING * POSTERIOR,
+    thinning_posterior=THINNING,
     num_chains=4,
     warm_start=False,
     apply_jitter=False,
@@ -165,14 +168,37 @@ waic = float(meval.waic()["waic_deviance"].iloc[0])
 # ..............................................................................
 # ---- CRPS ----
 # ..............................................................................
-key, subkey = jax.random.split(key)
-crps = meval.crps_sample(
-    key=subkey,
-    predictive_samples_n=1,
+
+probs = jnp.linspace(0.005, 0.995, 25)
+crps_by_qs = meval.crps(
+    probs=probs,
     newdata=newdata | {"response": test["bmi"].to_numpy()},
-    subsamples_n=min(1000, POSTERIOR),
-    n_chunk=500,
-)
+    k=10,
+).mean()
+
+key, subkey = jax.random.split(key)
+crps_by_qs_estimated = meval.crps_by_estimated_quantiles(
+    key=subkey,
+    probs=probs,
+    newdata=newdata | {"response": test["bmi"].to_numpy()},
+    m=3,
+).mean()
+
+quantile_crps_by_qs = meval.crps(
+    probs=probs,
+    newdata=newdata | {"response": test["bmi"].to_numpy()},
+    k=10,
+    quantile_weight_fn=lambda alpha: (2 * alpha - 1) ** 2,
+).mean()
+
+key, subkey = jax.random.split(key)
+quantile_crps_by_qs_estimated = meval.crps_by_estimated_quantiles(
+    key=subkey,
+    probs=probs,
+    newdata=newdata | {"response": test["bmi"].to_numpy()},
+    quantile_weight_fn=lambda alpha: (2 * alpha - 1) ** 2,
+    m=3,
+).mean()
 
 # ..............................................................................
 # ---- Summary of distribution analysis ----
@@ -181,7 +207,10 @@ dist_summary = pd.DataFrame(
     {
         "waic": waic,
         "log_score": log_score,
-        "crps": crps,
+        "crps": crps_by_qs,
+        "crps_by_qs_estimated": crps_by_qs_estimated,
+        "quantile_crps_by_qs": quantile_crps_by_qs,
+        "quantile_crps_by_qs_estimated": quantile_crps_by_qs_estimated,
     },
     index=[0],  # type: ignore
 )
