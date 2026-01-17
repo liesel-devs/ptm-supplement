@@ -6,6 +6,7 @@ suppressPackageStartupMessages({
   library(tidyverse)
   library(fs)
   library(scoringRules)
+  library(scoringutils)
   library(tictoc) # for timing
 
   library(skewsamp)
@@ -19,12 +20,6 @@ suppressPackageStartupMessages({
 option_list <- list(
   # parameters from params.csv
   make_option(
-    "--fold",
-    type = "integer",
-    metavar = "integer",
-    default = 1
-  ),
-  make_option(
     "--jobrow",
     type = "character",
     default = 1,
@@ -34,13 +29,19 @@ option_list <- list(
     "--jobdir",
     type = "character",
     help = "Job Directory",
-    default = "application-db/jobs/007-kowal"
+    default = "application-dbbmi/007-kowal"
+  ),
+  make_option(
+    "--testing",
+    type = "integer",
+    default = 1
   )
 )
 
 # Parse arguments
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
+opt$jobrow <- as.integer(opt$jobrow) + 1
 
 params <- read_csv(fs::path(opt$jobdir, "params.csv"))[opt$jobrow, ]
 
@@ -80,6 +81,13 @@ if (ALL_DATA) {
   test <- data[1:2, ]
 }
 
+if (opt$testing == 1) {
+  train = train[1:1000, ]
+  NSAVE = 100
+} else {
+  NSAVE = 5000
+}
+
 
 # Source files:
 source(fs::path(opt$jobdir, "kowal/source_sba.R"))
@@ -105,9 +113,9 @@ tic()
 m <- sbgp(
   y = train$bmi,
   locs = train$age,
-  nsave = 5000,
+  nsave = NSAVE,
   approx_g = FALSE,
-  locs_test = test$age
+  locs_test = test$age,
 )
 timing <- toc(quiet = TRUE)
 log_info("Model fit complete.")
@@ -118,6 +126,34 @@ log_info("Model fit complete.")
 log_info("Starting CRPS computation.")
 crps <- mean(crps_sample(test$bmi, t(m$post_ypred)))
 log_info("CRPS computation finished.")
+
+probs <- seq(0.005, 0.995, length.out = 25)
+
+pred <- apply(t(m$post_ypred), 1, quantile, probs = probs) |> t()
+
+qs <- 1:length(probs) |>
+  sapply(function(i) {
+    scoringutils::quantile_score(
+      test$bmi,
+      pred[, i, drop = FALSE],
+      probs[i],
+      weigh = TRUE
+    )
+  })
+crps_by_qs <- qs |> mean()
+
+weighted_qs <- 1:length(probs) |>
+  sapply(function(i) {
+    weight <- (2 * probs[i] - 1)^2
+    weight *
+      scoringutils::quantile_score(
+        test$bmi,
+        pred[, i, drop = FALSE],
+        probs[i],
+        weigh = TRUE
+      )
+  })
+quantile_crps <- mean(weighted_qs)
 
 
 # ..............................................................................
@@ -139,7 +175,7 @@ m <- sbgp(
   locs = train$age,
   nsave = 5000,
   approx_g = FALSE,
-  locs_test = age_seq
+  locs_test = age_seq,
 )
 timing <- toc(quiet = TRUE)
 log_info("Model fit complete.")
@@ -186,7 +222,9 @@ p
 
 dist_summary <- tibble(
   crps,
-  log_score
+  log_score,
+  crps_by_qs_estimated = crps_by_qs,
+  quantile_crps_by_qs_estimated = quantile_crps
 )
 
 # ..............................................................................
