@@ -4,7 +4,7 @@ This repository contains code and illustrations for the following paper:
 
 Brachem, J., Wiemann, P. F. V., & Kneib, T. (2024). Bayesian penalized transformation models: Structured additive location-scale regression for arbitrary conditional distributions (No. arXiv:2404.07440). arXiv. https://doi.org/10.48550/arXiv.2404.07440
 
-- A Python library for PTMs is available on GitHub: https://github.com/liesel-devs/liesel-ptm 
+- The Python library for PTMs is available on GitHub: https://github.com/liesel-devs/liesel-ptm 
 - Documentation for the library is available via https://liesel-devs.github.io/liesel-ptm/
 
 >Penalized transformation models (PTMs) are a semiparametric location–scale regression
@@ -70,9 +70,9 @@ Sometimes the installation of Jax, a key dependency of both liesel and liesel_pt
 Now you can launch and run the demo notebooks:
 
 ```
-jupyter notebook demos/dutch-growth-study.ipynb
+$ jupyter notebook demos/dutch-growth-study.ipynb
 ```
 
 ```
-jupyter notebook demos/framingham-heart-study.ipynb
+$ jupyter notebook demos/framingham-heart-study.ipynb
 ```
