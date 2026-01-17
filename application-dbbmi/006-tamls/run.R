@@ -16,10 +16,10 @@ suppressPackageStartupMessages({
 option_list <- list(
   # parameters from params.csv
   make_option(
-    "--fold",
-    type = "integer",
-    metavar = "integer",
-    default = 1
+    "--jobdir",
+    type = "character",
+    help = "Job Directory",
+    default = "application-dbbmi/006-tamls"
   ),
   make_option(
     "--jobrow",
@@ -28,16 +28,16 @@ option_list <- list(
     help = "Job ID [default %default]"
   ),
   make_option(
-    "--jobdir",
-    type = "character",
-    help = "Job Directory",
-    default = "application-dbbmi/006-tamls"
-  ),
+    "--testing",
+    type = "integer",
+    default = 1
+  )
 )
 
 # Parse arguments
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
+opt$jobrow <- as.integer(opt$jobrow) + 1
 
 params <- read_csv(fs::path(opt$jobdir, "params.csv"))[opt$jobrow, ]
 
@@ -215,7 +215,7 @@ fit_tamls <- function(data, basis_order) {
   mTM <- gamlss(
     formula = y ~
       1 +
-        pb(age, inter = 17),
+      pb(age, inter = 17),
     sigma.fo = ~ 0 +
       pb(age, inter = 17),
     data = train,
@@ -292,14 +292,29 @@ q <- predict_quantiles_on_test(
   probs
 ) # (nprobs, ntest)
 
-quantile_scores <- scoringutils::quantile_score(
-  observed = test$bmi,
-  predicted = q |> t(),
-  quantile_level = probs,
-  weigh = TRUE
-)
+qs <- 1:length(probs) |>
+  sapply(function(i) {
+    scoringutils::quantile_score(
+      test$bmi,
+      t(q)[, i, drop = FALSE],
+      probs[i],
+      weigh = TRUE
+    )
+  })
+crps <- qs |> mean()
 
-crps <- quantile_scores |> mean()
+weighted_qs <- 1:length(probs) |>
+  sapply(function(i) {
+    weight <- (2 * probs[i] - 1)^2
+    weight *
+      scoringutils::quantile_score(
+        test$bmi,
+        t(q)[, i, drop = FALSE],
+        probs[i],
+        weigh = TRUE
+      )
+  })
+quantile_crps <- mean(weighted_qs)
 
 # ..............................................................................
 # ---- Quantile score ----
@@ -376,7 +391,8 @@ p <- data |>
 
 dist_summary <- tibble(
   crps,
-  log_score
+  log_score,
+  quantile_crps_by_qs = quantile_crps
 )
 
 # ..............................................................................
