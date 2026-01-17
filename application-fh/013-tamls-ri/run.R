@@ -16,10 +16,10 @@ suppressPackageStartupMessages({
 option_list <- list(
   # parameters from params.csv
   make_option(
-    "--fold",
-    type = "integer",
-    metavar = "integer",
-    default = 1
+    "--jobdir",
+    type = "character",
+    help = "Job Directory",
+    default = "application-fh/013-tamls-ri"
   ),
   make_option(
     "--jobrow",
@@ -28,21 +28,16 @@ option_list <- list(
     help = "Job ID [default %default]"
   ),
   make_option(
-    "--jobdir",
-    type = "character",
-    help = "Job Directory",
-    default = "application-fh/014-tamls-ri"
-  ),
-  make_option(
-    "--model",
-    type = "character",
-    default = "default"
+    "--testing",
+    type = "integer",
+    default = 1
   )
 )
 
 # Parse arguments
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
+opt$jobrow <- as.integer(opt$jobrow) + 1
 
 params <- read_csv(fs::path(opt$jobdir, "params.csv"))[opt$jobrow, ]
 
@@ -85,6 +80,10 @@ ALL_DATA = params$fold == -1
 if (ALL_DATA) {
   train <- data
   test <- data[1:2, ]
+}
+
+if (opt$testing == 1) {
+  train <- train[1:200, ]
 }
 
 ## ----TAMLS-model--------------------------------------------------------------
@@ -224,17 +223,17 @@ fit_tamls <- function(data, basis_order) {
   if (str_detect(params$model, "ri")) {
     form_mu <- y ~
       1 +
-        pb(age, inter = 17) +
-        sex +
-        re(random = ~ 1 | newid)
+      pb(age, inter = 17) +
+      sex +
+      re(random = ~ 1 | newid)
     form_sigma <- ~ 0 +
       pb(age, inter = 17) +
       sex
   } else {
     form_mu <- y ~
       1 +
-        pb(age, inter = 17) +
-        sex
+      pb(age, inter = 17) +
+      sex
     form_sigma <- ~ 0 +
       pb(age, inter = 17) +
       sex
@@ -354,6 +353,34 @@ crps <- scoringRules::crps_sample(
 ) |>
   mean()
 
+
+probs <- seq(0.005, 0.995, length.out = 25)
+q <- apply(pred_samples, 1, quantile, probs = probs) # (probs, ntest)
+
+qs <- 1:length(probs) |>
+  sapply(function(i) {
+    scoringutils::quantile_score(
+      test$cholst,
+      t(q)[, i, drop = FALSE],
+      probs[i],
+      weigh = TRUE
+    )
+  })
+crps_by_qs_estimated <- qs |> mean()
+
+weighted_qs <- 1:length(probs) |>
+  sapply(function(i) {
+    weight <- (2 * probs[i] - 1)^2
+    weight *
+      scoringutils::quantile_score(
+        test$cholst,
+        t(q)[, i, drop = FALSE],
+        probs[i],
+        weigh = TRUE
+      )
+  })
+quantile_crps <- mean(weighted_qs)
+
 # ..............................................................................
 # ---- Plot ----
 # ..............................................................................
@@ -433,7 +460,9 @@ ggsave(fs::path(
 # ..............................................................................
 
 dist_summary <- tibble(
-  crps
+  crps,
+  crps_by_qs_estimated = crps_by_qs_estimated,
+  quantile_crps_by_qs_estimated = quantile_crps
 )
 
 # ..............................................................................
