@@ -37,12 +37,14 @@ jaxlib==0.7.2
 jaxopt==0.8.5
 jaxtyping==0.3.2
 jedi==0.19.2
+joblib==1.5.3
 jsonschema==4.26.0
 jsonschema-specifications==2025.9.1
 jupyter-client==8.7.0
 jupyter-core==5.9.1
 kiwisolver==1.4.9
 liesel==0.4.3
+liesel-bctm @ git+https://github.com/liesel-devs/liesel-bctm.git@a5466f47aec46d0a09afcb08800f209f22446f92
 liesel-gam @ git+https://github.com/liesel-devs/liesel_gam.git@58d68322c22952db39720b91207c7a4ec27d16c1
 liesel-ptm @ git+https://github.com/liesel-devs/liesel-ptm.git@466a7f55864cc0a6034fcff79b826cf626d3ccd0
 lineax==0.0.8
@@ -86,6 +88,7 @@ referencing==0.37.0
 requests==2.32.5
 rpds-py==0.30.0
 ryp==0.2.0
+scikit-learn==1.8.0
 scipy==1.16.2
 seaborn==0.13.2
 setuptools==80.9.0
@@ -95,6 +98,7 @@ stack-data==0.6.3
 statsmodels==0.14.5
 tenacity==9.1.2
 tfp-nightly==0.26.0.dev20250918
+threadpoolctl==3.6.0
 toolz==1.0.0
 tornado==6.5.4
 tqdm==4.67.1
