@@ -1,15 +1,15 @@
-from pathlib import Path
-import pandas as pd
-import jax.numpy as jnp
+import argparse
 import time
 from datetime import datetime
-import argparse
+from pathlib import Path
 
+import jax
+import jax.numpy as jnp
 import liesel.goose as gs
 import liesel_ptm as ptm
+import pandas as pd
 import tensorflow_probability.substrates.jax.distributions as tfd
-import jax
-from liesel_ptm import ps, term, lin
+from liesel_ptm import lin, ps, term
 
 jax.config.update("jax_enable_x64", True)
 
@@ -19,7 +19,7 @@ parser.add_argument(
     "--jobdir", type=str, default="application-fh/003-ptm-nonlinear-nori"
 )
 parser.add_argument("--jobrow", type=int, default=0)
-parser.add_argument("--testing", type=bool, default=True)
+parser.add_argument("--testing", type=int, default=1)
 args, _ = parser.parse_known_args()
 
 
@@ -177,6 +177,38 @@ crps = meval.crps_sample(
     subsamples_n=min(1000, POSTERIOR),
 )
 
+probs = jnp.linspace(0.005, 0.995, 25)
+
+crps_by_qs = meval.crps(
+    probs=probs,
+    newdata=newdata | {"response": test["cholst"].to_numpy()},
+    k=10,
+).mean()
+
+key, subkey = jax.random.split(key)
+crps_by_qs_estimated = meval.crps_by_estimated_quantiles(
+    key=subkey,
+    probs=probs,
+    newdata=newdata | {"response": test["cholst"].to_numpy()},
+    m=3,
+).mean()
+
+quantile_crps_by_qs = meval.crps(
+    probs=probs,
+    newdata=newdata | {"response": test["cholst"].to_numpy()},
+    k=10,
+    quantile_weight_fn=lambda alpha: (2 * alpha - 1) ** 2,
+).mean()
+
+key, subkey = jax.random.split(key)
+quantile_crps_by_qs_estimated = meval.crps_by_estimated_quantiles(
+    key=subkey,
+    probs=probs,
+    newdata=newdata | {"response": test["cholst"].to_numpy()},
+    quantile_weight_fn=lambda alpha: (2 * alpha - 1) ** 2,
+    m=3,
+).mean()
+
 # ..............................................................................
 # ---- WAIC ----
 # ..............................................................................
@@ -192,6 +224,10 @@ dist_summary = pd.DataFrame(
     {
         "waic": waic,
         "crps": crps,
+        "crps_by_qs": crps_by_qs,
+        "quantile_crps_by_qs": quantile_crps_by_qs,
+        "crps_by_qs_estimated": crps_by_qs_estimated,
+        "quantile_crps_by_qs_estimated": quantile_crps_by_qs_estimated,
     },
     index=[0],  # type: ignore
 )
