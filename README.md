@@ -28,6 +28,7 @@ data ("standardized conditional density").
 
 ## Contents
 
+- `appendix.pdf`: Appendix with additional information not included in the main text.
 - `demos/dutch-growth-study.ipynb`: An illustrative jupyter notebook, showcasing the application of a PTM to the fourth dutch growth study.
 - `demos/framingham-heart-study.ipynb`: An illustrative jupyter notebook, showcasing the application of a PTM to the fourth dutch growth study.
 - `application-dbbmi/` and `application-fh/`: R and Python code for the application comparisons reported in the paper. Instructions for running this code are included at the end of this readme.
