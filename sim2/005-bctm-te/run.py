@@ -1,3 +1,4 @@
+import itertools
 import time
 from datetime import datetime
 from pathlib import Path
@@ -7,10 +8,52 @@ import jax
 import jax.numpy as jnp
 import liesel.goose as gs
 import liesel_bctm as bctm
+import liesel_ptm as ptm
 import pandas as pd
+import properscoring as ps
 from liesel_ptm.waic import waic as waic_fn
 
 model = "bctm-te"
+
+
+def batched(iterable, n):
+    """Yield successive n-sized chunks from iterable."""
+    it = iter(iterable)
+    while True:
+        chunk = list(itertools.islice(it, n))
+        if not chunk:
+            break
+        yield chunk
+
+
+def crps_streaming(pred_samples, observations, n_chunk):
+    """
+    Compute CRPS in chunks along the leading axis of pred_samples.
+    Memory-safe computation for many samples when using ps.crps_ensemble.
+
+    Parameters
+    ----------
+    pred_samples : jnp.ndarray, shape (nsamp, ntest)
+        Ensemble predictions. Leading axis will be chunked.
+    observations : array-like, shape (ntest,)
+        Observed values to compare against.
+    n_chunk : int
+        Number of ensemble members per chunk.
+
+    Returns
+    -------
+    Mean CRPS across all observations.
+    """
+    nsamp = pred_samples.shape[0]
+    crps_vals = []
+
+    for i in range(0, nsamp, n_chunk):
+        chunk = pred_samples[i : i + n_chunk]  # (n_chunk, ntest)
+        crps_chunk = ps.crps_ensemble(observations, chunk.T)  # shape (ntest,)
+
+        crps_vals.append(crps_chunk)
+
+    return jnp.mean(jnp.stack(crps_vals))
 
 
 @click.command()
@@ -210,6 +253,43 @@ def run_one(
     kld = jnp.mean(test["log_pdf"].to_numpy() - lppd_i)
 
     # ..............................................................................
+    # ---- CRPS on test data via samples ----
+    # ..............................................................................
+    N_SUBSAMPLES_CRPS = min(posterior * 4, 1000)
+
+    subsamples = ptm.util.subsample_tree(
+        jax.random.key(data_seed), samples, num_samples=N_SUBSAMPLES_CRPS
+    )
+
+    ngrid = test.shape[0]
+    ygrid = jnp.linspace(ymin, ymax, 250)
+    smooths_list = []
+    for i in range(ngrid):
+        newdata = {}
+        for j in range(4):
+            newdata[f"yx{j}"] = (ygrid, test[f"x{j}"].to_numpy()[i])
+        smooths_list.append(newdata)
+
+    pred_samples_list = []
+    for i, sl_chunk in enumerate(batched(smooths_list, 100)):
+        pred = bctm.summary.trafo_csample(
+            key=jax.random.key(data_seed + i),  # change seed per batch
+            n=1,
+            samples=subsamples,
+            smooths_list=sl_chunk,
+            ygrid=ygrid,
+            builder=ctmb,
+        )
+        pred_samples_list.append(pred)
+
+    pred_samples = jnp.concatenate(pred_samples_list, axis=-1)
+
+    nsamp, c, s, ntest = pred_samples.shape
+    pred_samples = jnp.reshape(pred_samples, shape=(nsamp * c * s, ntest))
+
+    crps = crps_streaming(pred_samples, test["y"].to_numpy(), 500)
+
+    # ..............................................................................
     # ---- WAIC ----
     # ..............................................................................
 
@@ -245,6 +325,7 @@ def run_one(
             "cdf_mad": cdf_mad,
             "cdf_ci_coverage": coverage,
             "cdf_ci_width": width,
+            "crps": crps,
         },
         index=[0],  # type: ignore
     )
