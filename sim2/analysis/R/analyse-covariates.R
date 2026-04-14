@@ -12,6 +12,8 @@ dir_create(out_dir)
 
 covars <- read_csv(path(data_dir, "covariates.csv"))
 
+covars <- covars |>
+  filter(model != "ddpstar")
 
 # ..............................................................................
 # ---- First look ----

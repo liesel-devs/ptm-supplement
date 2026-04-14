@@ -28,36 +28,6 @@ cbPalette <- c(
 options(ggplot2.discrete.colour = cbPalette)
 options(ggplot2.discrete.fill = cbPalette)
 
-# ..............................................................................
-# ---- Compare the SBGP / Kowal model variants ----
-# ..............................................................................
-
-dist |>
-  filter(model == "kowal") |>
-  group_by(job) |>
-  summarise(
-    kld = mean(kld, na.rm = T),
-    cdf_mad = mean(cdf_mad, na.rm = T),
-    # log_score = mean(log_score, na.rm = T),
-    crps = mean(crps, na.rm = T),
-    cdf_ci_coverage = mean(cdf_ci_coverage, na.rm = TRUE),
-    cdf_ci_width = mean(cdf_ci_width, na.rm = TRUE),
-  )
-
-
-dist |>
-  filter(model == "kowal") |>
-  group_by(job) |>
-  summarise(n = n())
-
-
-# exclude less performant SBGP / kowal variant
-# 003b performans worse than 003
-# 003c has only a small number of finished jobs, most of them errored out
-dist <- dist |>
-  filter(!str_detect(job, "003b")) |>
-  filter(!str_detect(job, "003c"))
-
 
 # ..............................................................................
 # ---- PTM with vs. without jittering ----
@@ -120,6 +90,46 @@ dist <- dist |>
   ) |>
   identity()
 
+
+detect_outlier <- function(x) {
+  b <- boxplot.stats(x)
+  lower <- b$stats[1]
+  upper <- b$stats[5]
+
+  is_outlier <- x < lower | x > upper
+  is_outlier
+}
+
+
+dist <- dist |>
+  group_by(ntrain, model) |>
+  mutate(outlier_waic = detect_outlier(waic)) |>
+  mutate(outlier_kld = detect_outlier(kld)) |>
+  mutate(outlier_cdf_mad = detect_outlier(cdf_mad)) |>
+  mutate(outlier_crps = detect_outlier(crps)) |>
+  ungroup() |>
+  mutate(
+    outlier_waic = ifelse(model == "SBGP", outlier_waic, FALSE),
+    outlier_kld = ifelse(model == "SBGP", outlier_kld, FALSE),
+    outlier_cdf_mad = ifelse(model == "SBGP", outlier_cdf_mad, FALSE),
+    outlier_crps = ifelse(model == "SBGP", outlier_crps, FALSE)
+  )
+
+# how many outliers are there for SBGP?
+dist |>
+  filter(model == "SBGP") |>
+  filter(!outlier_waic) |>
+  filter(!outlier_kld) |>
+  filter(!outlier_crps) |>
+  filter(!outlier_cdf_mad) |>
+  group_by(ntrain, data_type) |>
+  summarise(n = n())
+
+dist <- dist |>
+  filter(!outlier_waic) |>
+  filter(!outlier_kld) |>
+  filter(!outlier_crps) |>
+  filter(!outlier_cdf_mad)
 
 distsu <- dist |>
   group_by(model, ntrain, data_type, job) |>
@@ -349,6 +359,56 @@ dist |>
 
 ggsave(path(out_dir, "waic.pdf"), width = 6.5, height = 4)
 
+dist |>
+  filter(model != "PTM-jitter") |>
+  rename(measure = waic) |>
+  filter(!is.na(measure)) |>
+  mutate(model = fct_reorder(model, measure, .desc = TRUE, .fun = mean)) |>
+  group_by(model, data_type, ntrain) |>
+  mutate(sd = sd(measure)) |>
+  mutate(mean = mean(measure)) |>
+  ungroup() |>
+  group_by(data_type, ntrain) |>
+  mutate(is_minimum = row_number() == which.min(mean)) |>
+  mutate(measure_minimum = ifelse(is_minimum, mean, NA)) |>
+  ungroup() |>
+  ggplot() +
+  aes(model, measure) +
+  stat_summary(
+    fun = mean,
+    geom = "point",
+    aes(color = data_type, shape = data_type, size = sd),
+    alpha = 0.7,
+  ) +
+  stat_summary(
+    fun = mean,
+    geom = "line",
+    aes(color = data_type, group = data_type),
+    alpha = 0.7,
+  ) +
+  geom_point(aes(model, measure_minimum), shape = 8, color = "black") +
+  coord_flip() +
+  facet_wrap(~N_train, scales = "free_x", labeller = label_both) +
+  labs(
+    y = "WAIC",
+    x = "Model",
+    title = TeX("WAIC by Data Type and $N_{train}$"),
+    size = "SD",
+    color = "Data Type",
+    fill = "",
+    shape = "Data Type"
+  ) +
+  theme_light() +
+  guides(size = "none") +
+  theme(
+    legend.position = "bottom",
+    panel.grid = element_blank(),
+    axis.title.y = element_blank()
+  ) +
+  NULL
+
+ggsave(path(out_dir, "waic_sbgp.pdf"), width = 6.5, height = 4)
+
 
 dist |>
   filter(model != "SBGP") |>
@@ -400,6 +460,56 @@ dist |>
   NULL
 
 ggsave(path(out_dir, "kld.pdf"), width = 6.5, height = 4)
+
+dist |>
+  filter(model != "PTM-jitter") |>
+  rename(measure = kld) |>
+  filter(!is.na(measure)) |>
+  mutate(model = fct_reorder(model, measure, .desc = TRUE, .fun = mean)) |>
+  group_by(model, data_type, ntrain) |>
+  mutate(sd = sd(measure)) |>
+  mutate(mean = mean(measure)) |>
+  ungroup() |>
+  group_by(data_type, ntrain) |>
+  mutate(is_minimum = row_number() == which.min(mean)) |>
+  mutate(measure_minimum = ifelse(is_minimum, mean, NA)) |>
+  ungroup() |>
+  ggplot() +
+  aes(model, measure) +
+  stat_summary(
+    fun = mean,
+    geom = "point",
+    aes(color = data_type, shape = data_type, size = sd),
+    alpha = 0.7,
+  ) +
+  stat_summary(
+    fun = mean,
+    geom = "line",
+    aes(color = data_type, group = data_type),
+    alpha = 0.7,
+  ) +
+  geom_point(aes(model, measure_minimum), shape = 8, color = "black") +
+  coord_flip() +
+  facet_wrap(~N_train, scales = "free_x", labeller = label_both) +
+  labs(
+    y = "KLD",
+    x = "Model",
+    title = TeX("KLD by Data Type and $N_{train}$"),
+    size = "SD",
+    color = "Data Type",
+    fill = "",
+    shape = "Data Type"
+  ) +
+  theme_light() +
+  guides(size = "none") +
+  theme(
+    legend.position = "bottom",
+    panel.grid = element_blank(),
+    axis.title.y = element_blank()
+  ) +
+  NULL
+
+ggsave(path(out_dir, "kld_sbgp.pdf"), width = 6.5, height = 4)
 
 
 dist |>
