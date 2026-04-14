@@ -91,37 +91,48 @@
 #'      col='black', type = 's', lwd = 3)
 #' }
 #' @export
-sblm = function(y, X, X_test = X,
-                psi = length(y),
-                laplace_approx = TRUE,
-                approx_g = FALSE,
-                nsave = 1000,
-                ngrid = 100,
-                verbose = TRUE){
-
+sblm = function(
+  y,
+  X,
+  X_test = X,
+  psi = length(y),
+  laplace_approx = TRUE,
+  approx_g = FALSE,
+  nsave = 1000,
+  ngrid = 100,
+  verbose = TRUE
+) {
   # For testing:
   # X_test = X; psi = length(y); laplace_approx = TRUE; approx_g = FALSE; nsave = 1000; verbose = TRUE; ngrid = 100
 
   # Data dimensions:
-  n = length(y); p = ncol(X)
+  n = length(y)
+  p = ncol(X)
 
   # Testing data points:
-  if(!is.matrix(X_test)) X_test = matrix(X_test, nrow  = 1)
+  if (!is.matrix(X_test)) {
+    X_test = matrix(X_test, nrow = 1)
+  }
 
   # And some checks on columns:
-  if(p >= n) stop('The g-prior requires p < n')
-  if(p != ncol(X_test)) stop('X_test and X must have the same number of columns')
+  if (p >= n) {
+    stop('The g-prior requires p < n')
+  }
+  if (p != ncol(X_test)) {
+    stop('X_test and X must have the same number of columns')
+  }
   #----------------------------------------------------------------------------
   # Key matrix quantities:
   XtX = crossprod(X)
   XtXinv = chol2inv(chol(XtX))
-  xt_Sigma_x = sapply(1:n, function(i)
-    crossprod(X[i,], XtXinv)%*%X[i,])
+  xt_Sigma_x = sapply(1:n, function(i) {
+    crossprod(X[i, ], XtXinv) %*% X[i, ]
+  })
   #----------------------------------------------------------------------------
   # Initialize the transformation:
 
   # Define the CDF of y:
-  Fy = function(t) n/(n+1)*ecdf(y)(t)
+  Fy = function(t) n / (n + 1) * ecdf(y)(t)
 
   # Evaluate at the unique y-values:
   y0 = sort(unique(y))
@@ -129,25 +140,28 @@ sblm = function(y, X, X_test = X,
 
   # Grid of values for the CDF of z (based on the prior)
   z_grid = sort(unique(
-    sapply(range(psi*xt_Sigma_x), function(xtemp){
-      qnorm(seq(0.01, 0.99, length.out = ngrid),
-            mean = 0, # assuming prior mean zero
-            sd = sqrt(1 + xtemp))
+    sapply(range(psi * xt_Sigma_x), function(xtemp) {
+      qnorm(
+        seq(0.01, 0.99, length.out = ngrid),
+        mean = 0, # assuming prior mean zero
+        sd = sqrt(1 + xtemp)
+      )
     })
   ))
 
   # Define the moments of the CDF of z:
-  if(laplace_approx){
+  if (laplace_approx) {
     # Use a normal approximation for the posterior of theta
 
     # Recurring terms:
-    Sigma_hat_unscaled = psi/(1+psi)*XtXinv # unscaled covariance (w/o sigma)
-    xt_Sigma_hat_unscaled_x = sapply(1:n, function(i)
-      crossprod(X[i,], Sigma_hat_unscaled)%*%X[i,])
+    Sigma_hat_unscaled = psi / (1 + psi) * XtXinv # unscaled covariance (w/o sigma)
+    xt_Sigma_hat_unscaled_x = sapply(1:n, function(i) {
+      crossprod(X[i, ], Sigma_hat_unscaled) %*% X[i, ]
+    })
 
     # First pass: fix Fz() = qnorm(), initialize coefficients
     z = qnorm(Fy(y))
-    theta_hat = Sigma_hat_unscaled%*%crossprod(X, z) # point estimate
+    theta_hat = Sigma_hat_unscaled %*% crossprod(X, z) # point estimate
 
     # Alternative rank-based approaches (SLOW! but similar...)
     # theta_hat = rank_approx(y, X) # alternative rank-based approach
@@ -156,67 +170,64 @@ sblm = function(y, X, X_test = X,
 
     # Second pass: update g(), then update coefficients
     # Moments of Z|X:
-    mu_z = X%*%theta_hat
+    mu_z = X %*% theta_hat
     sigma_z = sqrt(1 + xt_Sigma_hat_unscaled_x)
 
     # CDF of z:
-    Fz_eval = Fz_fun(z = z_grid,
-                     weights = rep(1/n, n),
-                     mean_vec = mu_z,
-                     sd_vec = sigma_z)
+    Fz_eval = Fz_fun(
+      z = z_grid,
+      weights = rep(1 / n, n),
+      mean_vec = mu_z,
+      sd_vec = sigma_z
+    )
 
     # Check: update the grid if needed
-    zcon = contract_grid(z = z_grid,
-                         Fz = Fz_eval,
-                         lower = 0.001, upper =  0.999)
-    z_grid = zcon$z; Fz_eval = zcon$Fz
+    zcon = contract_grid(z = z_grid, Fz = Fz_eval, lower = 0.001, upper = 0.999)
+    z_grid = zcon$z
+    Fz_eval = zcon$Fz
 
     # Transformation:
-    g = g_fun(y = y0,
-              Fy_eval = Fy_eval,
-              z = z_grid,
-              Fz_eval = Fz_eval)
+    g = g_fun(y = y0, Fy_eval = Fy_eval, z = z_grid, Fz_eval = Fz_eval)
 
     # Updated coefficients:
     z = g(y) # update latent data
-    theta_hat = Sigma_hat_unscaled%*%crossprod(X, z) # updated coefficients
+    theta_hat = Sigma_hat_unscaled %*% crossprod(X, z) # updated coefficients
 
     # Moments of Z|X:
-    mu_z = X%*%theta_hat
+    mu_z = X %*% theta_hat
     #sigma_z = sqrt(1 + xt_Sigma_hat_unscaled_x) # no need to update
-
   } else {
-
     # Prior mean is zero:
     mu_z = rep(0, n)
 
     # Marginal SD based on prior:
-    sigma_z = sqrt(1 + psi*xt_Sigma_x)
+    sigma_z = sqrt(1 + psi * xt_Sigma_x)
   }
 
   # Define the CDF of z:
-  Fz_eval = Fz_fun(z = z_grid,
-                   weights = rep(1/n, n),
-                   mean_vec = mu_z,
-                   sd_vec = sigma_z)
+  Fz_eval = Fz_fun(
+    z = z_grid,
+    weights = rep(1 / n, n),
+    mean_vec = mu_z,
+    sd_vec = sigma_z
+  )
 
   # Check: update the grid if needed
-  zcon = contract_grid(z = z_grid,
-                       Fz = Fz_eval,
-                       lower = 0.001, upper =  0.999)
-  z_grid = zcon$z; Fz_eval = zcon$Fz
+  zcon = contract_grid(z = z_grid, Fz = Fz_eval, lower = 0.001, upper = 0.999)
+  z_grid = zcon$z
+  Fz_eval = zcon$Fz
 
   # Compute the transformation:
-  g = g_fun(y = y0, Fy_eval = Fy_eval,
-            z = z_grid, Fz_eval = Fz_eval)
+  g = g_fun(y = y0, Fy_eval = Fy_eval, z = z_grid, Fz_eval = Fz_eval)
 
   # Latent data:
   z = g(y)
 
   # Define the grid for approximations using equally-spaced + quantile points:
   y_grid = sort(unique(c(
-    seq(min(y), max(y), length.out = ngrid/2),
-    quantile(y0, seq(0, 1, length.out = ngrid/2)))))
+    seq(min(y), max(y), length.out = ngrid / 2),
+    quantile(y0, seq(0, 1, length.out = ngrid / 2))
+  )))
 
   # Inverse transformation function:
   g_inv = g_inv_approx(g = g, t_grid = y_grid)
@@ -227,38 +238,40 @@ sblm = function(y, X, X_test = X,
   post_g = array(NA, c(nsave, length(y0)))
 
   # Run the MC:
-  if(verbose) timer0 = proc.time()[3] # For timing the sampler
-  for(nsi in 1:nsave){
-
+  if (verbose) {
+    timer0 = proc.time()[3]
+  } # For timing the sampler
+  for (nsi in 1:nsave) {
     # NOTE: we could do this in blocks, perhaps more efficiently...
 
     #----------------------------------------------------------------------------
     # Block 1: sample the transformation
-    if(!approx_g){
-
+    if (!approx_g) {
       # Bayesian bootstrap for the CDFs
 
       # Dirichlet(1) weights for y:
       weights_y = rgamma(n = n, shape = 1)
-      weights_y  = weights_y/sum(weights_y)
+      weights_y = weights_y / sum(weights_y)
 
       # Dirichlet(1) weights for x:
       weights_x = rgamma(n = n, shape = 1)
-      weights_x  = weights_x/sum(weights_x)
+      weights_x = weights_x / sum(weights_x)
 
       # BB CDF of y:
-      Fy_eval = sapply(y0, function(t)
-        n/(n+1)*sum(weights_y[y <= t]))
+      Fy_eval = sapply(y0, function(t) {
+        n / (n + 1) * sum(weights_y[y <= t])
+      })
 
       # BB CDF of z:
-      Fz_eval = Fz_fun(z = z_grid,
-                       weights = weights_x,
-                       mean_vec = mu_z,
-                       sd_vec = sigma_z)
+      Fz_eval = Fz_fun(
+        z = z_grid,
+        weights = weights_x,
+        mean_vec = mu_z,
+        sd_vec = sigma_z
+      )
 
       # Compute the transformation:
-      g = g_fun(y = y0, Fy_eval = Fy_eval,
-                z = z_grid, Fz_eval = Fz_eval)
+      g = g_fun(y = y0, Fy_eval = Fy_eval, z = z_grid, Fz_eval = Fz_eval)
 
       # Update z:
       z = g(y)
@@ -268,33 +281,39 @@ sblm = function(y, X, X_test = X,
     }
     #----------------------------------------------------------------------------
     # Block 2: sample the scale adjustment (SD)
-    SSR_psi = sum(z^2) - psi/(psi+1)*crossprod(z, X%*%XtXinv%*%crossprod(X, z))
-    sigma_epsilon = 1/sqrt(rgamma(n = 1,
-                                  shape = .001 + n/2,
-                                  rate = .001 + SSR_psi/2))
+    SSR_psi = sum(z^2) -
+      psi / (psi + 1) * crossprod(z, X %*% XtXinv %*% crossprod(X, z))
+    sigma_epsilon = 1 /
+      sqrt(rgamma(n = 1, shape = .001 + n / 2, rate = .001 + SSR_psi / 2))
     #----------------------------------------------------------------------------
     # Block 3: sample the regression coefficients
-    ch_Q = chol(1/sigma_epsilon^2*(1+psi)/(psi)*XtX)
-    ell_theta = 1/sigma_epsilon^2*crossprod(X, z)
-    theta = backsolve(ch_Q,
-                     forwardsolve(t(ch_Q), ell_theta) +
-                       rnorm(p))
+    ch_Q = chol(1 / sigma_epsilon^2 * (1 + psi) / (psi) * XtX)
+    ell_theta = 1 / sigma_epsilon^2 * crossprod(X, z)
+    theta = backsolve(
+      ch_Q,
+      forwardsolve(t(ch_Q), ell_theta) +
+        rnorm(p)
+    )
     #----------------------------------------------------------------------------
     # Store the MC:
 
     # Posterior samples of the model parameters:
-    post_theta[nsi,] = theta
+    post_theta[nsi, ] = theta
 
     # Predictive samples of ytilde:
-    ztilde = X_test%*%theta + sigma_epsilon*rnorm(n = nrow(X_test))
-    post_ypred[nsi,] = g_inv(ztilde)
+    ztilde = X_test %*% theta + sigma_epsilon * rnorm(n = nrow(X_test))
+    post_ypred[nsi, ] = g_inv(ztilde)
 
     # Posterior samples of the transformation:
-    post_g[nsi,] = g(y0)
+    post_g[nsi, ] = g(y0)
     #----------------------------------------------------------------------------
-    if(verbose) computeTimeRemaining(nsi, timer0, nsave, nrep = ceiling(nsave/3))
+    if (verbose) {
+      computeTimeRemaining(nsi, timer0, nsave, nrep = ceiling(nsave / 3))
+    }
   }
-  if(verbose) print(paste('Total time: ', round((proc.time()[3] - timer0)), 'seconds'))
+  if (verbose) {
+    print(paste('Total time: ', round((proc.time()[3] - timer0)), 'seconds'))
+  }
 
   return(list(
     coefficients = colMeans(post_theta),
@@ -302,7 +321,14 @@ sblm = function(y, X, X_test = X,
     post_theta = post_theta,
     post_ypred = post_ypred,
     post_g = post_g,
-    model = 'sblm', y = y, X = X, X_test = X_test, psi = psi, approx_g = approx_g, sigma_epsilon = sigma_epsilon))
+    model = 'sblm',
+    y = y,
+    X = X,
+    X_test = X_test,
+    psi = psi,
+    approx_g = approx_g,
+    sigma_epsilon = sigma_epsilon
+  ))
 }
 #---------------------------------------------------------------
 #' Semiparametric Bayesian spline model
@@ -374,15 +400,17 @@ sblm = function(y, X, X_test = X,
 #' }
 #' @importFrom spikeSlabGAM sm
 #' @export
-sbsm = function(y, x = NULL,
-                x_test = NULL,
-                psi = NULL,
-                laplace_approx = TRUE,
-                approx_g = FALSE,
-                nsave = 1000,
-                ngrid = 100,
-                verbose = TRUE){
-
+sbsm = function(
+  y,
+  x = NULL,
+  x_test = NULL,
+  psi = NULL,
+  laplace_approx = TRUE,
+  approx_g = FALSE,
+  nsave = 1000,
+  ngrid = 100,
+  verbose = TRUE
+) {
   # For testing:
   # psi = length(y); laplace_approx = TRUE; approx_g = FALSE; nsave = 1000; verbose = TRUE; x_test = sort(runif(100)); ngrid = 100
 
@@ -390,16 +418,20 @@ sbsm = function(y, x = NULL,
   n = length(y)
 
   # Observation points:
-  if(is.null(x)) x = seq(0, 1, length=n)
-  if(is.null(x_test)) x_test = x
+  if (is.null(x)) {
+    x = seq(0, 1, length = n)
+  }
+  if (is.null(x_test)) {
+    x_test = x
+  }
 
   # Recale to [0,1]:
-  x = (x - min(x))/(max(x) - min(x))
-  x_test = (x_test - min(x_test))/(max(x_test) - min(x_test))
+  x = (x - min(x)) / (max(x) - min(x))
+  x_test = (x_test - min(x_test)) / (max(x_test) - min(x_test))
   #----------------------------------------------------------------------------
   # Orthogonalized P-spline and related quantities:
-  X = cbind(1/sqrt(n), poly(x, 1), sm(x))
-  X = X/sqrt(sum(diag(crossprod(X))))
+  X = cbind(1 / sqrt(n), poly(x, 1), sm(x))
+  X = X / sqrt(sum(diag(crossprod(X))))
   diagXtX = colSums(X^2)
   p = length(diagXtX)
 
@@ -407,20 +439,20 @@ sbsm = function(y, x = NULL,
   xt_Sigma_x = rowSums(X^2) # sapply(1:n, function(i) sum(X[i,]^2/diagXtX))
 
   # Smoothing parameter:
-  if(is.null(psi)){
-
+  if (is.null(psi)) {
     # Flag to sample:
     sample_psi = TRUE
 
     # Initialize:
     psi = n
-
-  } else sample_psi = FALSE
+  } else {
+    sample_psi = FALSE
+  }
   #----------------------------------------------------------------------------
   # Initialize the transformation:
 
   # Define the CDF of y:
-  Fy = function(t) n/(n+1)*ecdf(y)(t)
+  Fy = function(t) n / (n + 1) * ecdf(y)(t)
 
   # Evaluate at the unique y-values:
   y0 = sort(unique(y))
@@ -428,90 +460,89 @@ sbsm = function(y, x = NULL,
 
   # Grid of values for the CDF of z:
   z_grid = sort(unique(
-    sapply(range(psi*xt_Sigma_x), function(xtemp){
-      qnorm(seq(0.01, 0.99, length.out = ngrid),
-            mean = 0, # assuming prior mean zero
-            sd = sqrt(1 + xtemp))
+    sapply(range(psi * xt_Sigma_x), function(xtemp) {
+      qnorm(
+        seq(0.01, 0.99, length.out = ngrid),
+        mean = 0, # assuming prior mean zero
+        sd = sqrt(1 + xtemp)
+      )
     })
   ))
 
   # Define the moments of the CDF of z:
-  if(laplace_approx){
+  if (laplace_approx) {
     # Use a normal approximation for the posterior of theta
 
     # Recurring terms:
-    diag_Sigma_hat_unscaled = 1/(diagXtX + 1/psi)
-    xt_Sigma_hat_unscaled_x = colSums(t(X^2)*diag_Sigma_hat_unscaled)
+    diag_Sigma_hat_unscaled = 1 / (diagXtX + 1 / psi)
+    xt_Sigma_hat_unscaled_x = colSums(t(X^2) * diag_Sigma_hat_unscaled)
     #xt_Sigma_hat_unscaled_x = sapply(1:n, function(i)
     #  crossprod(X[i,], diag(diag_Sigma_hat_unscaled))%*%X[i,])
 
     # First pass: fix Fz() = qnorm(), initialize coefficients
     z = qnorm(Fy(y))
-    theta_hat = diag_Sigma_hat_unscaled*crossprod(X, z) # point estimate
+    theta_hat = diag_Sigma_hat_unscaled * crossprod(X, z) # point estimate
 
     # Second pass: update g(), then update coefficients
     # Moments of Z|X:
-    mu_z = X%*%theta_hat
+    mu_z = X %*% theta_hat
     sigma_z = sqrt(1 + xt_Sigma_hat_unscaled_x)
 
     # CDF of z:
-    Fz_eval = Fz_fun(z = z_grid,
-                     weights = rep(1/n, n),
-                     mean_vec = mu_z,
-                     sd_vec = sigma_z)
+    Fz_eval = Fz_fun(
+      z = z_grid,
+      weights = rep(1 / n, n),
+      mean_vec = mu_z,
+      sd_vec = sigma_z
+    )
 
     # Check: update the grid if needed
-    zcon = contract_grid(z = z_grid,
-                         Fz = Fz_eval,
-                         lower = 0.001, upper =  0.999)
-    z_grid = zcon$z; Fz_eval = zcon$Fz
+    zcon = contract_grid(z = z_grid, Fz = Fz_eval, lower = 0.001, upper = 0.999)
+    z_grid = zcon$z
+    Fz_eval = zcon$Fz
 
     # Transformation:
-    g = g_fun(y = y0,
-              Fy_eval = Fy_eval,
-              z = z_grid,
-              Fz_eval = Fz_eval)
+    g = g_fun(y = y0, Fy_eval = Fy_eval, z = z_grid, Fz_eval = Fz_eval)
 
     # Updated coefficients:
     z = g(y) # update latent data
-    theta_hat = diag_Sigma_hat_unscaled*crossprod(X, z) # updated coefficients
+    theta_hat = diag_Sigma_hat_unscaled * crossprod(X, z) # updated coefficients
 
     # Moments of Z|X:
-    mu_z = X%*%theta_hat
+    mu_z = X %*% theta_hat
     #sigma_z = sqrt(1 + xt_Sigma_hat_unscaled_x)
-
   } else {
-
     # Prior mean is zero:
     mu_z = rep(0, n)
 
     # Marginal SD based on prior:
-    sigma_z = sqrt(1 + psi*xt_Sigma_x)
+    sigma_z = sqrt(1 + psi * xt_Sigma_x)
   }
 
   # Define the CDF of z:
-  Fz_eval = Fz_fun(z = z_grid,
-                   weights = rep(1/n, n),
-                   mean_vec = mu_z,
-                   sd_vec = sigma_z)
+  Fz_eval = Fz_fun(
+    z = z_grid,
+    weights = rep(1 / n, n),
+    mean_vec = mu_z,
+    sd_vec = sigma_z
+  )
 
   # Check: update the grid if needed
-  zcon = contract_grid(z = z_grid,
-                       Fz = Fz_eval,
-                       lower = 0.001, upper =  0.999)
-  z_grid = zcon$z; Fz_eval = zcon$Fz
+  zcon = contract_grid(z = z_grid, Fz = Fz_eval, lower = 0.001, upper = 0.999)
+  z_grid = zcon$z
+  Fz_eval = zcon$Fz
 
   # Compute the transformation:
-  g = g_fun(y = y0, Fy_eval = Fy_eval,
-            z = z_grid, Fz_eval = Fz_eval)
+  g = g_fun(y = y0, Fy_eval = Fy_eval, z = z_grid, Fz_eval = Fz_eval)
 
   # Latent data:
   z = g(y)
 
   # Define the grid for approximations using equally-spaced + quantile points:
   y_grid = sort(unique(c(
-    seq(min(y), max(y), length.out = ngrid/2),
-    quantile(y0, seq(0, 1, length.out = ngrid/2)))))
+    seq(min(y), max(y), length.out = ngrid / 2),
+    quantile(y0, seq(0, 1, length.out = ngrid / 2))
+  )))
 
   # Inverse transformation function:
   g_inv = g_inv_approx(g = g, t_grid = y_grid)
@@ -525,35 +556,38 @@ sbsm = function(y, x = NULL,
   post_psi = rep(NA, nsave)
 
   # Run the MC:
-  if(verbose) timer0 = proc.time()[3] # For timing the sampler
-  for(nsi in 1:nsave){
+  if (verbose) {
+    timer0 = proc.time()[3]
+  } # For timing the sampler
+  for (nsi in 1:nsave) {
     #----------------------------------------------------------------------------
     # Block 1: sample the transformation
-    if(!approx_g){
-
+    if (!approx_g) {
       # Bayesian bootstrap for the CDFs
 
       # Dirichlet(1) weights for y:
       weights_y = rgamma(n = n, shape = 1)
-      weights_y  = weights_y/sum(weights_y)
+      weights_y = weights_y / sum(weights_y)
 
       # Dirichlet(1) weights for x:
       weights_x = rgamma(n = n, shape = 1)
-      weights_x  = weights_x/sum(weights_x)
+      weights_x = weights_x / sum(weights_x)
 
       # BB CDF of y: (NOTE could be faster!)
-      Fy_eval = sapply(y0, function(t)
-        n/(n+1)*sum(weights_y[y <= t]))
+      Fy_eval = sapply(y0, function(t) {
+        n / (n + 1) * sum(weights_y[y <= t])
+      })
 
       # BB CDF of z:
-      Fz_eval = Fz_fun(z = z_grid,
-                       weights = weights_x,
-                       mean_vec = mu_z,
-                       sd_vec = sigma_z)
+      Fz_eval = Fz_fun(
+        z = z_grid,
+        weights = weights_x,
+        mean_vec = mu_z,
+        sd_vec = sigma_z
+      )
 
       # Compute the transformation:
-      g = g_fun(y = y0, Fy_eval = Fy_eval,
-                z = z_grid, Fz_eval = Fz_eval)
+      g = g_fun(y = y0, Fy_eval = Fy_eval, z = z_grid, Fz_eval = Fz_eval)
 
       # Update z:
       z = g(y)
@@ -564,54 +598,133 @@ sbsm = function(y, x = NULL,
     #----------------------------------------------------------------------------
     # Block 2: sample the scale adjustment (SD)
     # SSR_psi = sum(z^2) - crossprod(z, X%*%solve(crossprod(X) + diag(1/psi, p))%*%crossprod(X,z))
-    SSR_psi = sum(z^2) - crossprod(1/sqrt(diagXtX + 1/psi)*crossprod(X, z))
-    sigma_epsilon = 1/sqrt(rgamma(n = 1,
-                                  shape = .001 + n/2,
-                                  rate = .001 + SSR_psi/2))
+    SSR_psi = sum(z^2) -
+      crossprod(1 / sqrt(diagXtX + 1 / psi) * crossprod(X, z))
+    sigma_epsilon = 1 /
+      sqrt(rgamma(n = 1, shape = .001 + n / 2, rate = .001 + SSR_psi / 2))
     #----------------------------------------------------------------------------
     # Block 3: sample the regression coefficients
-    Q_theta = 1/sigma_epsilon^2*(diagXtX + 1/psi)
-    ell_theta = 1/sigma_epsilon^2*crossprod(X, z)
-    theta = rnorm(n = p,
-                 mean = Q_theta^-1*ell_theta,
-                 sd = sqrt(Q_theta^-1))
+    Q_theta = 1 / sigma_epsilon^2 * (diagXtX + 1 / psi)
+    ell_theta = 1 / sigma_epsilon^2 * crossprod(X, z)
+    theta = rnorm(n = p, mean = Q_theta^-1 * ell_theta, sd = sqrt(Q_theta^-1))
     #----------------------------------------------------------------------------
     # Block 4: sample the smoothing parameter
-    if(sample_psi){
-      psi = 1/rgamma(n = 1,
-                     shape = 0.01 + p/2,
-                     rate = 0.01 + sum(theta^2)/(2*sigma_epsilon^2))
+    if (sample_psi) {
+      psi = 1 /
+        rgamma(
+          n = 1,
+          shape = 0.01 + p / 2,
+          rate = 0.01 + sum(theta^2) / (2 * sigma_epsilon^2)
+        )
     }
     #----------------------------------------------------------------------------
     # Store the MC:
 
     # Posterior samples of the model parameters:
-    post_theta[nsi,] = theta
+    post_theta[nsi, ] = theta
 
     # Predictive samples of ytilde:
     # Note: it's easier/faster to just smooth for the testing points
     # (the orthogonalized basis is a pain to recompute)
-    ztilde = stats::spline(x = x, y = X%*%theta, xout = x_test)$y +
-      sigma_epsilon*rnorm(n = length(x_test))
-    post_ypred[nsi,] = g_inv(ztilde)
+    ztilde = stats::spline(x = x, y = X %*% theta, xout = x_test)$y +
+      sigma_epsilon * rnorm(n = length(x_test))
+    post_ypred[nsi, ] = g_inv(ztilde)
 
     # Posterior samples of the transformation:
-    post_g[nsi,] = g(y0)
+    post_g[nsi, ] = g(y0)
 
     post_psi[nsi] = psi
     #----------------------------------------------------------------------------
-    if(verbose) computeTimeRemaining(nsi, timer0, nsave, nrep = ceiling(nsave/2))
+    if (verbose) {
+      computeTimeRemaining(nsi, timer0, nsave, nrep = ceiling(nsave / 2))
+    }
   }
-  if(verbose) print(paste('Total time: ', round((proc.time()[3] - timer0)), 'seconds'))
+  if (verbose) {
+    print(paste('Total time: ', round((proc.time()[3] - timer0)), 'seconds'))
+  }
 
   return(list(
     coefficients = colMeans(post_theta),
     fitted.values = colMeans(post_ypred),
     post_theta = post_theta,
     post_ypred = post_ypred,
-    post_g = post_g,  post_psi = post_psi,
-    model = 'sbsm', y = y, X = X, psi = psi, approx_g = approx_g, sigma_epsilon = sigma_epsilon))
+    post_g = post_g,
+    post_psi = post_psi,
+    model = 'sbsm',
+    y = y,
+    X = X,
+    psi = psi,
+    approx_g = approx_g,
+    sigma_epsilon = sigma_epsilon
+  ))
 }
+
+
+# Evaluate piecewise-linear g(y) and log g'(y),
+# with linear extrapolation in both tails.
+eval_g_and_log_deriv_linear_tails = function(y, y0, g_vals) {
+  y = as.numeric(y)
+  y0 = as.numeric(y0)
+  g_vals = as.numeric(g_vals)
+
+  m = length(y0)
+
+  if (length(g_vals) != m) {
+    stop("g_vals must have same length as y0.")
+  }
+  if (m < 2) {
+    stop("Need at least two grid points in y0.")
+  }
+
+  dy = diff(y0)
+  dg = diff(g_vals)
+
+  if (any(dy <= 0)) {
+    stop("y0 must be strictly increasing.")
+  }
+  if (any(dg <= 0)) {
+    stop("g_vals must be strictly increasing.")
+  }
+
+  slopes = dg / dy
+  left_slope = slopes[1]
+  right_slope = slopes[m - 1]
+
+  # interval index:
+  # 0 for y < y0[1]
+  # 1,...,m-1 for interior intervals
+  # m for y >= y0[m]
+  k = findInterval(y, y0, rightmost.closed = TRUE)
+
+  g_y = numeric(length(y))
+  log_gp_y = numeric(length(y))
+
+  # left tail
+  left = (k == 0L)
+  if (any(left)) {
+    g_y[left] = g_vals[1] + left_slope * (y[left] - y0[1])
+    log_gp_y[left] = log(left_slope)
+  }
+
+  # right tail, including y == y0[m]
+  right = (k >= m)
+  if (any(right)) {
+    g_y[right] = g_vals[m] + right_slope * (y[right] - y0[m])
+    log_gp_y[right] = log(right_slope)
+  }
+
+  # interior intervals
+  inside = (!left & !right)
+  if (any(inside)) {
+    kk = k[inside]
+    slope = slopes[kk]
+    g_y[inside] = g_vals[kk] + slope * (y[inside] - y0[kk])
+    log_gp_y[inside] = log(slope)
+  }
+
+  list(g = g_y, log_gprime = log_gp_y)
+}
+
 #---------------------------------------------------------------
 #' Semiparametric Bayesian Gaussian processes
 #'
@@ -689,32 +802,49 @@ sbsm = function(y, x = NULL,
 #' }
 #' @import GpGp fields
 #' @export
-sbgp = function(y, locs,
-                X = NULL,
-                covfun_name = "matern_isotropic",
-                locs_test = locs,
-                X_test = NULL,
-                nn = 30,
-                emp_bayes = TRUE,
-                approx_g = FALSE,
-                nsave = 1000,
-                ngrid = 100){
-
+sbgp = function(
+  y,
+  locs,
+  X = NULL,
+  covfun_name = "matern_isotropic",
+  locs_test = locs,
+  X_test = NULL,
+  y_test = NULL,
+  nn = 30,
+  emp_bayes = TRUE,
+  approx_g = FALSE,
+  nsave = 1000,
+  ngrid = 100
+) {
   # library(GpGp) # see if this fixes it...
   # For testing:
   # X = matrix(1, nrow = length(y)); covfun_name = "matern_isotropic"; locs_test = locs; X_test = X; nn = 30; emp_bayes = TRUE; approx_g = FALSE; nsave = 1000; ngrid = 100
 
   # Data dimensions:
-  y = as.matrix(y); n = length(y);
-  locs = as.matrix(locs); d = ncol(locs)
+  y = as.matrix(y)
+  n = length(y)
+  locs = as.matrix(locs)
+  d = ncol(locs)
 
   # Testing data:
-  locs_test = as.matrix(locs_test); n_test = nrow(locs_test)
+  locs_test = as.matrix(locs_test)
+  n_test = nrow(locs_test)
+
+  # Optional observed test responses, for posterior CDF / log-density evaluation:
+  if (!is.null(y_test)) {
+    y_test = as.numeric(y_test)
+    if (length(y_test) != n_test) {
+      stop("y_test must have length n_test.")
+    }
+  }
 
   # Covariates:
-  if(is.null(X)) X = matrix(1, nrow = n)
-  if(is.null(X_test)){ # supply our own testing matrix
-    if(isTRUE(all.equal(locs, locs_test))){
+  if (is.null(X)) {
+    X = matrix(1, nrow = n)
+  }
+  if (is.null(X_test)) {
+    # supply our own testing matrix
+    if (isTRUE(all.equal(locs, locs_test))) {
       # If the training and testing points are the same,
       # then we input the same design matrix for the testing:
       X_test = X
@@ -725,149 +855,161 @@ sbgp = function(y, locs,
   }
 
   # And check:
-  X = as.matrix(X); p = ncol(X)
+  X = as.matrix(X)
+  p = ncol(X)
   X_test = as.matrix(X_test)
 
   # Some checks needed for locs, locs_test, X, X_test
-  if(nrow(locs) != n || nrow(X) != n || nrow(X_test) != n_test ||
-     ncol(X_test) != p || ncol(locs_test) != d){
+  if (
+    nrow(locs) != n ||
+      nrow(X) != n ||
+      nrow(X_test) != n_test ||
+      ncol(X_test) != p ||
+      ncol(locs_test) != d
+  ) {
     stop('Check input dimensions!')
   }
 
   # To avoid errors for small n:
-  nn = min(nn, n-1)
+  nn = min(nn, n - 1)
 
   # This is a temporary hack needed for sampling w/ one-dimensional inputs:
-  if(!emp_bayes && d==1){
-    aug = 1e-6*rnorm(n)
+  if (!emp_bayes && d == 1) {
+    aug = 1e-6 * rnorm(n)
     locs = cbind(locs, aug)
     locs_test = cbind(locs_test, aug)
   }
 
   # Define the CDF of y:
-  Fy = function(t) n/(n+1)*ecdf(y)(t)
+  Fy = function(t) n / (n + 1) * ecdf(y)(t)
   #----------------------------------------------------------------------------
   print('Initial GP fit...')
   # Initial GP fit:
   #z = qnorm(Fy(y))
   z = y
-  fit_gp = GpGp::fit_model(y = z,
-                           locs = locs,
-                           X = X,
-                           covfun_name = covfun_name,
-                           m_seq = nn,
-                           silent = TRUE)
+  fit_gp = GpGp::fit_model(
+    y = z,
+    locs = locs,
+    X = X,
+    covfun_name = covfun_name,
+    m_seq = nn,
+    silent = TRUE
+  )
 
   # Fitted values for observed data:
-  mu_z = GpGp::predictions(fit = fit_gp,
-                            locs_pred = locs,
-                            X_pred  = X)
+  mu_z = GpGp::predictions(fit = fit_gp, locs_pred = locs, X_pred = X)
   # SD of latent term:
   # Nugget variance (NOTE: this works for most (but not all!) covariance functions in GpGp!)
-  sigma_epsilon = sqrt(fit_gp$covparms[1]*fit_gp$covparms[length(fit_gp$covparms)])
-  if(n < 1000){
-
+  sigma_epsilon = sqrt(
+    fit_gp$covparms[1] * fit_gp$covparms[length(fit_gp$covparms)]
+  )
+  if (n < 1000) {
     # Compute the covariance matrix, but remove the nugget:
-    K_theta = do.call(covfun_name, list(fit_gp$covparms, locs ))
+    K_theta = do.call(covfun_name, list(fit_gp$covparms, locs))
     #K_theta = match.fun(covfun_name)(fit_gp$covparms, locs)
     diag(K_theta) = diag(K_theta) - sigma_epsilon^2
 
     # Posterior covariance for mu requires inverses:
     K_theta_inv = chol2inv(chol(K_theta))
-    Sigma_mu = chol2inv(chol(K_theta_inv + diag(1/sigma_epsilon^2, n)))
+    Sigma_mu = chol2inv(chol(K_theta_inv + diag(1 / sigma_epsilon^2, n)))
 
     # Extract the diagonal elements for z:
     sigma_z = sqrt(sigma_epsilon^2 + diag(Sigma_mu))
-
   } else {
-
     # Ignore the uncertainty in the regression function,
     # which is likely small when n is very large (also much faster...)
     sigma_z = rep(sigma_epsilon, n)
-
   }
   #----------------------------------------------------------------------------
   # Initialize the transformation:
 
   # Evaluate CDF of Y at the unique y-values:
-  y0 = sort(unique(y)); Fy_eval = Fy(y0)
+  y0 = sort(unique(y))
+  Fy_eval = Fy(y0)
 
   # Grid of values for the CDF of z:
   z_grid = sort(unique(
-    sapply(range(mu_z), function(xtemp){
-      qnorm(seq(0.01, 0.99, length.out = ngrid),
-            mean = xtemp,
-            sd = sigma_epsilon)
+    sapply(range(mu_z), function(xtemp) {
+      qnorm(
+        seq(0.01, 0.99, length.out = ngrid),
+        mean = xtemp,
+        sd = sigma_epsilon
+      )
     })
   ))
 
   # Evaluate the CDF of z:
-  Fz_eval = Fz_fun(z = z_grid,
-                   weights = rep(1/n, n),
-                   mean_vec = mu_z,
-                   sd_vec = sigma_z)
+  Fz_eval = Fz_fun(
+    z = z_grid,
+    weights = rep(1 / n, n),
+    mean_vec = mu_z,
+    sd_vec = sigma_z
+  )
 
   # Compute the transformation:
-  g = g_fun(y = y0, Fy_eval = Fy_eval,
-            z = z_grid, Fz_eval = Fz_eval)
+  g = g_fun(y = y0, Fy_eval = Fy_eval, z = z_grid, Fz_eval = Fz_eval)
 
   # Latent data:
   z = g(y)
 
   # Define the grid for approximations using equally-spaced + quantile points:
   y_grid = sort(unique(c(
-    seq(min(y), max(y), length.out = ngrid/2),
-    quantile(y0, seq(0, 1, length.out = ngrid/2)))))
+    seq(min(y), max(y), length.out = ngrid / 2),
+    quantile(y0, seq(0, 1, length.out = ngrid / 2))
+  )))
 
   # Inverse transformation function:
   g_inv = g_inv_approx(g = g, t_grid = y_grid)
   #----------------------------------------------------------------------------
   print('Updated GP fit...')
   # Now update the GP coefficients:
-  fit_gp = GpGp::fit_model(y = z,
-                           locs = locs,
-                           X = X,
-                           covfun_name = covfun_name,
-                           start_parms = fit_gp$covparms,
-                           m_seq = nn,
-                           silent = TRUE)
+  fit_gp = GpGp::fit_model(
+    y = z,
+    locs = locs,
+    X = X,
+    covfun_name = covfun_name,
+    start_parms = fit_gp$covparms,
+    m_seq = nn,
+    silent = TRUE
+  )
 
   # Fitted values for observed data:
-  mu_z = GpGp::predictions(fit = fit_gp,
-                           locs_pred = locs,
-                           X_pred  = X,
-                           m = nn)
+  mu_z = GpGp::predictions(fit = fit_gp, locs_pred = locs, X_pred = X, m = nn)
 
   # Fitted values for testing data:
-  if(isTRUE(all.equal(X, X_test)) &&
-       isTRUE(all.equal(locs, locs_test))){
+  if (
+    isTRUE(all.equal(X, X_test)) &&
+      isTRUE(all.equal(locs, locs_test))
+  ) {
     # If the testing and training data are identical,
     # then there is no need to apply a separate predict function
     z_test = mu_z
   } else {
-    z_test = GpGp::predictions(fit = fit_gp,
-                               locs_pred = locs_test,
-                               X_pred  = X_test,
-                               m = nn)
+    z_test = GpGp::predictions(
+      fit = fit_gp,
+      locs_pred = locs_test,
+      X_pred = X_test,
+      m = nn
+    )
   }
 
   # SD of latent term:
   # Nugget variance (NOTE: this works for most (but not all!) covariance functions in GpGp!)
-  sigma_epsilon = sqrt(fit_gp$covparms[1]*fit_gp$covparms[length(fit_gp$covparms)])
-  if(n < 1000){
-
+  sigma_epsilon = sqrt(
+    fit_gp$covparms[1] * fit_gp$covparms[length(fit_gp$covparms)]
+  )
+  if (n < 1000) {
     # Compute the covariance matrix, but remove the nugget:
-    K_theta = do.call(covfun_name, list(fit_gp$covparms, locs ))
+    K_theta = do.call(covfun_name, list(fit_gp$covparms, locs))
     #K_theta = match.fun(covfun_name)(fit_gp$covparms, locs)
     diag(K_theta) = diag(K_theta) - sigma_epsilon^2
 
     # Posterior covariance for mu requires inverses:
     K_theta_inv = chol2inv(chol(K_theta))
-    Sigma_mu = chol2inv(chol(K_theta_inv + diag(1/sigma_epsilon^2, n)))
+    Sigma_mu = chol2inv(chol(K_theta_inv + diag(1 / sigma_epsilon^2, n)))
 
     # Extract the diagonal elements for z:
     sigma_z = sqrt(sigma_epsilon^2 + diag(Sigma_mu))
-
   } else {
     # Ignore the uncertainty in the regression function,
     # which is likely small when n is very large (this is also faster...)
@@ -879,39 +1021,45 @@ sbgp = function(y, locs,
   #----------------------------------------------------------------------------
   # Store MC output:
   post_ypred = array(NA, c(nsave, n_test))
+  post_CDFy = array(NA, c(nsave, n_test))
+  post_LogPDFy = array(NA, c(nsave, n_test))
+
+  post_LogPDFytrain = array(NA, c(nsave, n))
+
   post_g = array(NA, c(nsave, length(y0)))
 
   print('Sampling...')
 
   # Run the MC:
-  for(nsi in 1:nsave){
+  for (nsi in 1:nsave) {
     #----------------------------------------------------------------------------
     # Sample the transformation
-    if(!approx_g){
-
+    if (!approx_g) {
       # Bayesian bootstrap for the CDFs
 
       # Dirichlet(1) weights for y:
       weights_y = rgamma(n = n, shape = 1)
-      weights_y  = weights_y/sum(weights_y)
+      weights_y = weights_y / sum(weights_y)
 
       # Dirichlet(1) weights for x:
       weights_x = rgamma(n = n, shape = 1)
-      weights_x  = weights_x/sum(weights_x)
+      weights_x = weights_x / sum(weights_x)
 
       # BB CDF of y:
-      Fy_eval = sapply(y0, function(t)
-        n/(n+1)*sum(weights_y[y <= t]))
+      Fy_eval = sapply(y0, function(t) {
+        n / (n + 1) * sum(weights_y[y <= t])
+      })
 
       # BB CDF of z:
-      Fz_eval = Fz_fun(z = z_grid,
-                       weights = weights_x,
-                       mean_vec = mu_z,
-                       sd_vec = sigma_z)
+      Fz_eval = Fz_fun(
+        z = z_grid,
+        weights = weights_x,
+        mean_vec = mu_z,
+        sd_vec = sigma_z
+      )
 
       # Compute the transformation:
-      g = g_fun(y = y0, Fy_eval = Fy_eval,
-                z = z_grid, Fz_eval = Fz_eval)
+      g = g_fun(y = y0, Fy_eval = Fy_eval, z = z_grid, Fz_eval = Fz_eval)
 
       # Update z:
       z = g(y)
@@ -923,29 +1071,94 @@ sbgp = function(y, locs,
     # Store the MC:
 
     # Predictive samples of ytilde:
-    if(emp_bayes){
-      ztilde = z_test + sigma_epsilon*rnorm(n = n_test)
+    if (emp_bayes) {
+      ztilde = z_test + sigma_epsilon * rnorm(n = n_test)
     } else {
-      ztilde = cond_sim(fit = fit_gp,
-                        locs_pred = locs_test,
-                        X_pred = X_test,
-                        m = nn)
+      ztilde = cond_sim(
+        fit = fit_gp,
+        locs_pred = locs_test,
+        X_pred = X_test,
+        m = nn
+      )
     }
-    post_ypred[nsi,] = g_inv(ztilde)
+    post_ypred[nsi, ] = g_inv(ztilde)
+
+    # posterior predictive CDF / log density of observed y_test
+    if (!is.null(y_test)) {
+      # store current sampled transformation on y0
+      g_vals = g(y0)
+
+      # evaluate g(y_test) and log g'(y_test) using piecewise-linear
+      # interpolation with linear tail extrapolation
+      g_eval = eval_g_and_log_deriv_linear_tails(
+        y = y_test,
+        y0 = y0,
+        g_vals = g_vals
+      )
+
+      # evaluate g(y_train) and log g'(y_train) using piecewise-linear
+      # interpolation with linear tail extrapolation
+      g_eval_train = eval_g_and_log_deriv_linear_tails(
+        y = y,
+        y0 = y0,
+        g_vals = g_vals
+      )
+
+      # Posterior predictive CDF of y_test, conditional on current g
+      post_CDFy[nsi, ] =
+        pnorm((g_eval$g - z_test) / sigma_epsilon)
+
+      # Posterior predictive log density of y_test, conditional on current g
+      post_LogPDFy[nsi, ] =
+        dnorm(g_eval$g, mean = z_test, sd = sigma_epsilon, log = TRUE) +
+        g_eval$log_gprime
+
+      post_LogPDFytrain[nsi, ] =
+        dnorm(g_eval_train$g, mean = mu_z, sd = sigma_epsilon, log = TRUE) +
+        g_eval_train$log_gprime
+    }
 
     # Posterior samples of the transformation:
-    post_g[nsi,] = g(y0)
+    if (!is.null(y_test)) {
+      post_g[nsi, ] = g_vals
+    } else {
+      post_g[nsi, ] = g(y0)
+    }
+
     #----------------------------------------------------------------------------
   }
   print('Done!')
-
   return(list(
     coefficients = theta,
     fitted.values = colMeans(post_ypred),
     fit_gp = fit_gp,
     post_ypred = post_ypred,
+    post_CDFy = if (is.null(y_test)) NULL else post_CDFy,
+    post_LogPDFy = if (is.null(y_test)) NULL else post_LogPDFy,
+    post_LogPDFytrain = if (is.null(y_test)) NULL else post_LogPDFytrain,
     post_g = post_g,
-    model = 'sbgp', y = y, X = X, approx_g = approx_g, sigma_epsilon = sigma_epsilon))
+    mu_z = mu_z,
+    z_test = z_test,
+    y0 = y0,
+    model = 'sbgp',
+    y = y,
+    X = X,
+    approx_g = approx_g,
+    sigma_epsilon = sigma_epsilon
+  ))
+
+  # return(list(
+  #   coefficients = theta,
+  #   fitted.values = colMeans(post_ypred),
+  #   fit_gp = fit_gp,
+  #   post_ypred = post_ypred,
+  #   post_g = post_g,
+  #   model = 'sbgp',
+  #   y = y,
+  #   X = X,
+  #   approx_g = approx_g,
+  #   sigma_epsilon = sigma_epsilon
+  # ))
 }
 #' Semiparametric Bayesian quantile regression
 #'
@@ -1027,44 +1240,55 @@ sbgp = function(y, locs,
 #' @importFrom quantreg rq
 #' @importFrom statmod rinvgauss
 #' @export
-sbqr = function(y, X, tau = 0.5,
-                X_test = X,
-                psi = length(y),
-                laplace_approx = TRUE,
-                approx_g = FALSE,
-                nsave = 1000,
-                nburn = 100,
-                ngrid = 100,
-                verbose = TRUE){
-
+sbqr = function(
+  y,
+  X,
+  tau = 0.5,
+  X_test = X,
+  psi = length(y),
+  laplace_approx = TRUE,
+  approx_g = FALSE,
+  nsave = 1000,
+  nburn = 100,
+  ngrid = 100,
+  verbose = TRUE
+) {
   # For testing:
   # psi = length(y); laplace_approx = TRUE; approx_g = FALSE; nsave = 1000; nburn = 100; verbose = TRUE; ngrid = 100
 
   # Data dimensions:
-  n = length(y); p = ncol(X)
+  n = length(y)
+  p = ncol(X)
 
   # Testing data points:
-  if(!is.matrix(X_test)) X_test = matrix(X_test, nrow  = 1)
+  if (!is.matrix(X_test)) {
+    X_test = matrix(X_test, nrow = 1)
+  }
   n_test = nrow(X_test)
 
   # And some checks on columns:
-  if(p >= n) stop('The g-prior requires p < n')
-  if(p != ncol(X_test)) stop('X_test and X must have the same number of columns')
+  if (p >= n) {
+    stop('The g-prior requires p < n')
+  }
+  if (p != ncol(X_test)) {
+    stop('X_test and X must have the same number of columns')
+  }
 
   # Recurring terms:
-  a_tau = (1-2*tau)/(tau*(1-tau))
-  b_tau = sqrt(2/(tau*(1-tau)))
+  a_tau = (1 - 2 * tau) / (tau * (1 - tau))
+  b_tau = sqrt(2 / (tau * (1 - tau)))
 
   # Key matrix quantities:
   XtX = crossprod(X)
   XtXinv = chol2inv(chol(XtX))
-  xt_Sigma_x = sapply(1:n, function(i)
-    crossprod(X[i,], XtXinv)%*%X[i,])
+  xt_Sigma_x = sapply(1:n, function(i) {
+    crossprod(X[i, ], XtXinv) %*% X[i, ]
+  })
   #----------------------------------------------------------------------------
   # Initialize the transformation:
 
   # Define the CDF of y:
-  Fy = function(t) n/(n+1)*ecdf(y)(t)
+  Fy = function(t) n / (n + 1) * ecdf(y)(t)
 
   # Evaluate at the unique y-values:
   y0 = sort(unique(y))
@@ -1072,91 +1296,92 @@ sbqr = function(y, X, tau = 0.5,
 
   # Grid of values for the CDF of z:
   z_grid = sort(unique(
-    sapply(range(psi*xt_Sigma_x), function(xtemp){
-      qnorm(seq(0.001, 0.999, length.out = ngrid),
-            mean = 0 + a_tau, # assuming prior mean zero
-            sd = sqrt(b_tau^2 + xtemp))
+    sapply(range(psi * xt_Sigma_x), function(xtemp) {
+      qnorm(
+        seq(0.001, 0.999, length.out = ngrid),
+        mean = 0 + a_tau, # assuming prior mean zero
+        sd = sqrt(b_tau^2 + xtemp)
+      )
     })
   ))
 
   # Define the moments of the CDF of z (BEFORE parameter expansions)
-  if(laplace_approx){
+  if (laplace_approx) {
     # Use a normal approximation for the posterior of theta
 
     # First pass: fix Fz() = qnorm(), initialize coefficients
     z = qnorm(Fy(y))
-    fit  = rq(z ~ X - 1, tau = tau)
+    fit = rq(z ~ X - 1, tau = tau)
     Sigma_hat = summary(fit, se = 'boot', covariance = TRUE)$cov
-    xt_Sigma_hat_x = sapply(1:n, function(i)
-      crossprod(X[i,], Sigma_hat)%*%X[i,])
+    xt_Sigma_hat_x = sapply(1:n, function(i) {
+      crossprod(X[i, ], Sigma_hat) %*% X[i, ]
+    })
 
     # Moments of X%*%theta:
     mu_z = fitted(fit)
     sigma_z = sqrt(xt_Sigma_hat_x)
 
     # CDF of z, using Monte Carlo:
-    Fz_eval = rowMeans(sapply(rexp(n = 100), function(xi_s){
-      Fz_fun(z = z_grid,
-             weights = rep(1/n, n),
-             mean_vec = mu_z + a_tau*xi_s,
-             sd_vec = sqrt(sigma_z^2 + xi_s*b_tau^2))
+    Fz_eval = rowMeans(sapply(rexp(n = 100), function(xi_s) {
+      Fz_fun(
+        z = z_grid,
+        weights = rep(1 / n, n),
+        mean_vec = mu_z + a_tau * xi_s,
+        sd_vec = sqrt(sigma_z^2 + xi_s * b_tau^2)
+      )
     }))
 
     # Check: update the grid if needed
-    zcon = contract_grid(z = z_grid,
-                         Fz = Fz_eval,
-                         lower = 0.001, upper =  0.999)
-    z_grid = zcon$z; Fz_eval = zcon$Fz
+    zcon = contract_grid(z = z_grid, Fz = Fz_eval, lower = 0.001, upper = 0.999)
+    z_grid = zcon$z
+    Fz_eval = zcon$Fz
 
     # Transformation:
-    g = g_fun(y = y0,
-              Fy_eval = Fy_eval,
-              z = z_grid,
-              Fz_eval = Fz_eval)
+    g = g_fun(y = y0, Fy_eval = Fy_eval, z = z_grid, Fz_eval = Fz_eval)
 
     # Updated coefficients:
     z = g(y) # update latent data
-    fit  = rq(z ~ X - 1, tau = tau)
+    fit = rq(z ~ X - 1, tau = tau)
     Sigma_hat = summary(fit, se = 'boot', covariance = TRUE)$cov
-    xt_Sigma_hat_x = sapply(1:n, function(i)
-      crossprod(X[i,], Sigma_hat)%*%X[i,])
+    xt_Sigma_hat_x = sapply(1:n, function(i) {
+      crossprod(X[i, ], Sigma_hat) %*% X[i, ]
+    })
 
     # Moments of X%*%theta:
     mu_z = fitted(fit)
     sigma_z = sqrt(xt_Sigma_hat_x)
-
   } else {
-
     # Using the prior
     mu_z = rep(0, n)
-    sigma_z = sqrt(psi*xt_Sigma_x)
+    sigma_z = sqrt(psi * xt_Sigma_x)
   }
 
   # CDF of z, using Monte Carlo:
-  Fz_eval = rowMeans(sapply(rexp(n = 100), function(xi_s){
-    Fz_fun(z = z_grid,
-           weights = rep(1/n, n),
-           mean_vec = mu_z + a_tau*xi_s,
-           sd_vec = sqrt(sigma_z^2 + xi_s*b_tau^2))
+  Fz_eval = rowMeans(sapply(rexp(n = 100), function(xi_s) {
+    Fz_fun(
+      z = z_grid,
+      weights = rep(1 / n, n),
+      mean_vec = mu_z + a_tau * xi_s,
+      sd_vec = sqrt(sigma_z^2 + xi_s * b_tau^2)
+    )
   }))
 
   # Check: update the grid if needed
-  zcon = contract_grid(z = z_grid,
-                       Fz = Fz_eval,
-                       lower = 0.001, upper =  0.999)
-  z_grid = zcon$z; Fz_eval = zcon$Fz
+  zcon = contract_grid(z = z_grid, Fz = Fz_eval, lower = 0.001, upper = 0.999)
+  z_grid = zcon$z
+  Fz_eval = zcon$Fz
 
   # Compute the transformation:
-  g = g_fun(y = y0, Fy_eval = Fy_eval,
-            z = z_grid, Fz_eval = Fz_eval)
+  g = g_fun(y = y0, Fy_eval = Fy_eval, z = z_grid, Fz_eval = Fz_eval)
 
   # Latent data:
   z = g(y)
 
   # Define the grid for approximations using equally-spaced + quantile points:
   y_grid = sort(unique(c(
-    seq(min(y), max(y), length.out = ngrid/2),
-    quantile(y0, seq(0, 1, length.out = ngrid/2)))))
+    seq(min(y), max(y), length.out = ngrid / 2),
+    quantile(y0, seq(0, 1, length.out = ngrid / 2))
+  )))
 
   # Inverse transformation function:
   g_inv = g_inv_approx(g = g, t_grid = y_grid)
@@ -1164,7 +1389,7 @@ sbqr = function(y, X, tau = 0.5,
   # Initialize the parameters:
 
   # Coefficients:
-  theta = chol2inv(chol(XtX))%*%crossprod(X,z)
+  theta = chol2inv(chol(XtX)) %*% crossprod(X, z)
   #----------------------------------------------------------------------------
   # Store MC output:
   post_theta = array(NA, c(nsave, p))
@@ -1172,39 +1397,41 @@ sbqr = function(y, X, tau = 0.5,
   post_g = array(NA, c(nsave, length(y0)))
 
   # Run the MCMC:
-  if(verbose) timer0 = proc.time()[3] # For timing the sampler
-  for(nsi in 1:(nburn + nsave)){
-
+  if (verbose) {
+    timer0 = proc.time()[3]
+  } # For timing the sampler
+  for (nsi in 1:(nburn + nsave)) {
     #----------------------------------------------------------------------------
     # Block 1: sample the transformation
-    if(!approx_g){
-
+    if (!approx_g) {
       # Bayesian bootstrap for the CDFs
 
       # Dirichlet(1) weights for y:
       weights_y = rgamma(n = n, shape = 1)
-      weights_y  = weights_y/sum(weights_y)
+      weights_y = weights_y / sum(weights_y)
 
       # Dirichlet(1) weights for x:
       weights_x = rgamma(n = n, shape = 1)
-      weights_x  = weights_x/sum(weights_x)
+      weights_x = weights_x / sum(weights_x)
 
       # BB CDF of y:
-      Fy_eval = sapply(y0, function(t)
-        n/(n+1)*sum(weights_y[y <= t]))
+      Fy_eval = sapply(y0, function(t) {
+        n / (n + 1) * sum(weights_y[y <= t])
+      })
 
       # BB CDF of z:
       # (MC averages are good even for few replicates!)
-      Fz_eval = rowMeans(sapply(rexp(n = 10), function(xi_s){
-        Fz_fun(z = z_grid,
-               weights = weights_x,
-               mean_vec = mu_z + a_tau*xi_s,
-               sd_vec = sqrt(sigma_z^2 + xi_s*b_tau^2))
+      Fz_eval = rowMeans(sapply(rexp(n = 10), function(xi_s) {
+        Fz_fun(
+          z = z_grid,
+          weights = weights_x,
+          mean_vec = mu_z + a_tau * xi_s,
+          sd_vec = sqrt(sigma_z^2 + xi_s * b_tau^2)
+        )
       }))
 
       # Compute the transformation:
-      g = g_fun(y = y0, Fy_eval = Fy_eval,
-                z = z_grid, Fz_eval = Fz_eval)
+      g = g_fun(y = y0, Fy_eval = Fy_eval, z = z_grid, Fz_eval = Fz_eval)
 
       # Update z:
       z = g(y)
@@ -1214,38 +1441,50 @@ sbqr = function(y, X, tau = 0.5,
     }
     #----------------------------------------------------------------------------
     # Block 2: parameter expansion
-    xi = 1/rinvgauss(n = n,
-                     mean = sqrt((2 + a_tau^2/b_tau^2)/((z - X%*%theta)^2/b_tau^2)),
-                     shape = 2 + a_tau^2/b_tau^2)
+    xi = 1 /
+      rinvgauss(
+        n = n,
+        mean = sqrt((2 + a_tau^2 / b_tau^2) / ((z - X %*% theta)^2 / b_tau^2)),
+        shape = 2 + a_tau^2 / b_tau^2
+      )
     #----------------------------------------------------------------------------
     # Block 3: sample the regression coefficients
-    Q_theta = crossprod(X/sqrt(b_tau^2*xi)) + 1/psi*XtX # t(X)%*%diag(1/(b_tau^2*xi))%*%X + 1/psi*XtX
-    ell_theta = crossprod(X/(b_tau^2*xi), z - a_tau*xi) # t(X)%*%diag(1/(b_tau^2*xi))%*%(z - a_tau*xi)
+    Q_theta = crossprod(X / sqrt(b_tau^2 * xi)) + 1 / psi * XtX # t(X)%*%diag(1/(b_tau^2*xi))%*%X + 1/psi*XtX
+    ell_theta = crossprod(X / (b_tau^2 * xi), z - a_tau * xi) # t(X)%*%diag(1/(b_tau^2*xi))%*%(z - a_tau*xi)
     ch_Q = chol(Q_theta)
-    theta = backsolve(ch_Q,
-                      forwardsolve(t(ch_Q), ell_theta) +
-                        rnorm(p))
+    theta = backsolve(
+      ch_Q,
+      forwardsolve(t(ch_Q), ell_theta) +
+        rnorm(p)
+    )
     #----------------------------------------------------------------------------
     # Store the MCMC:
-    if(nsi > nburn){
+    if (nsi > nburn) {
       # Posterior samples of the model parameters:
-      post_theta[nsi - nburn,] = theta
+      post_theta[nsi - nburn, ] = theta
 
       # Quantile at the testing point:
-      post_qtau[nsi - nburn,] = g_inv(X_test%*%theta)
+      post_qtau[nsi - nburn, ] = g_inv(X_test %*% theta)
 
       # Predictive samples of ytilde:
       xi_test = rexp(n = n_test, rate = 1)
-      ztilde = X_test%*%theta + a_tau*xi_test + b_tau*sqrt(xi_test)*rnorm(n = n_test)
-      post_ypred[nsi - nburn,] = g_inv(ztilde)
+      ztilde = X_test %*%
+        theta +
+        a_tau * xi_test +
+        b_tau * sqrt(xi_test) * rnorm(n = n_test)
+      post_ypred[nsi - nburn, ] = g_inv(ztilde)
 
       # Posterior samples of the transformation:
-      post_g[nsi - nburn,] = g(y0)
+      post_g[nsi - nburn, ] = g(y0)
     }
     #----------------------------------------------------------------------------
-    if(verbose) computeTimeRemaining(nsi, timer0, nsave, nrep = ceiling(nsave/3))
+    if (verbose) {
+      computeTimeRemaining(nsi, timer0, nsave, nrep = ceiling(nsave / 3))
+    }
   }
-  if(verbose) print(paste('Total time: ', round((proc.time()[3] - timer0)), 'seconds'))
+  if (verbose) {
+    print(paste('Total time: ', round((proc.time()[3] - timer0)), 'seconds'))
+  }
 
   return(list(
     coefficients = colMeans(post_theta),
@@ -1254,7 +1493,14 @@ sbqr = function(y, X, tau = 0.5,
     post_ypred = post_ypred,
     post_qtau = post_qtau,
     post_g = post_g,
-    model = 'sbqr', y = y, X = X, X_test = X_test, psi = psi, approx_g = approx_g, tau = tau))
+    model = 'sbqr',
+    y = y,
+    X = X,
+    X_test = X_test,
+    psi = psi,
+    approx_g = approx_g,
+    tau = tau
+  ))
 }
 #---------------------------------------------------------------
 #' Post-processing with importance sampling
@@ -1349,28 +1595,32 @@ sbqr = function(y, X, tau = 0.5,
 #' }
 #' @importFrom MASS mvrnorm
 #' @export
-sir_adjust = function(fit,
-                      sir_frac = 0.3,
-                      nsims_prior = 100,
-                      verbose = TRUE){
+sir_adjust = function(fit, sir_frac = 0.3, nsims_prior = 100, verbose = TRUE) {
   # Checks:
-  if(fit$model == 'sbgp'){
-    warning('sbgp uses an empirical bayes approximation for the parameters,
-    so SIR sampling is not needed; returning the original fit...')
+  if (fit$model == 'sbgp') {
+    warning(
+      'sbgp uses an empirical bayes approximation for the parameters,
+    so SIR sampling is not needed; returning the original fit...'
+    )
     return(fit)
   }
-  if(fit$model != 'sblm' &&
-     fit$model != 'sbsm')
+  if (
+    fit$model != 'sblm' &&
+      fit$model != 'sbsm'
+  ) {
     stop('Currently implemented for sblm and sbsm only')
+  }
 
-  if(sir_frac <= 0 || sir_frac >= 1){
+  if (sir_frac <= 0 || sir_frac >= 1) {
     stop('sir_frac must be between zero and one')
   }
 
   # Extract some recurring terms:
   nsave = nrow(fit$post_ypred) # number of draws
-  y = fit$y; n = length(y);
-  X = fit$X; p = ncol(X)
+  y = fit$y
+  n = length(y)
+  X = fit$X
+  p = ncol(X)
 
   # Useful for matching:
   ind_y = match(y, sort(unique(y)))
@@ -1381,63 +1631,72 @@ sir_adjust = function(fit,
   # Sample from the prior:
 
   # Linear model case:
-  if(fit$model == 'sblm'){
-
+  if (fit$model == 'sblm') {
     # Matrix quantities (note: these *could* be passed in from fit)
     XtXinv = chol2inv(chol(crossprod(X)))
-    xt_Sigma_x = sapply(1:n, function(i)
-      crossprod(X[i,], XtXinv)%*%X[i,])
+    xt_Sigma_x = sapply(1:n, function(i) {
+      crossprod(X[i, ], XtXinv) %*% X[i, ]
+    })
 
     # Sample:
-    prior_theta = mvrnorm(n = nsims_prior,
-                          mu = rep(0,p),
-                          Sigma = sigma_epsilon^2*fit$psi*XtXinv)
+    prior_theta = mvrnorm(
+      n = nsims_prior,
+      mu = rep(0, p),
+      Sigma = sigma_epsilon^2 * fit$psi * XtXinv
+    )
   }
 
   # Spline case:
-  if(fit$model == 'sbsm'){
-
+  if (fit$model == 'sbsm') {
     # Matrix quantities (note: these *could* be passed in from fit)
     xt_Sigma_x = rowSums(X^2)
 
     # Sample:
-    prior_theta = matrix(rnorm(n = p*nsims_prior,
-                               mean = 0,
-                               sd = sigma_epsilon*sqrt(fit$psi)),
-                         nrow = nsims_prior)
+    prior_theta = matrix(
+      rnorm(n = p * nsims_prior, mean = 0, sd = sigma_epsilon * sqrt(fit$psi)),
+      nrow = nsims_prior
+    )
   }
 
   # Compute the log-importance weights:
   post_logw = rep(NA, nsave)
-  if(verbose) timer0 = proc.time()[3] # For timing the sampler
-  for(nsi in 1:nsave){
-
+  if (verbose) {
+    timer0 = proc.time()[3]
+  } # For timing the sampler
+  for (nsi in 1:nsave) {
     # Dirichlet(1) weights for x:
     weights_x = rgamma(n = n, shape = 1)
-    weights_x  = weights_x/sum(weights_x)
+    weights_x = weights_x / sum(weights_x)
 
     # Extract g(y), properly matched:
     z = fit$post_g[nsi, ind_y]
 
     # linear model or spline:
-    if(fit$model == 'sblm' ||
-       fit$model == 'sbsm' ){
-
+    if (
+      fit$model == 'sblm' ||
+        fit$model == 'sbsm'
+    ) {
       # Log-numerator:
-      log_numer = log(mean(sapply(1:nsims_prior, function(s){
-        prod(sapply(1:n, function(i){
-          sum(weights_x*dnorm(z[i],
-                              mean = X%*%prior_theta[s,],
-                              sd = sigma_epsilon))
+      log_numer = log(mean(sapply(1:nsims_prior, function(s) {
+        prod(sapply(1:n, function(i) {
+          sum(
+            weights_x *
+              dnorm(z[i], mean = X %*% prior_theta[s, ], sd = sigma_epsilon)
+          )
         }))
       })))
 
       # Log-denominator
       log_denom = sum(log(
-        sapply(1:n, function(i){
-          sum(weights_x*dnorm(z[i],
-                              mean = 0,
-                              sd = sigma_epsilon*sqrt(1 + fit$psi*xt_Sigma_x)))
+        sapply(1:n, function(i) {
+          sum(
+            weights_x *
+              dnorm(
+                z[i],
+                mean = 0,
+                sd = sigma_epsilon * sqrt(1 + fit$psi * xt_Sigma_x)
+              )
+          )
         })
       ))
     }
@@ -1446,20 +1705,24 @@ sir_adjust = function(fit,
     post_logw[nsi] = log_numer - log_denom
 
     # Check the timing:
-    if(verbose) computeTimeRemaining(nsi, timer0, nsave, nrep = nsave/10)
+    if (verbose) computeTimeRemaining(nsi, timer0, nsave, nrep = nsave / 10)
   }
-  if(verbose) print(paste('Total time: ', round((proc.time()[3] - timer0)), 'seconds'))
+  if (verbose) {
+    print(paste('Total time: ', round((proc.time()[3] - timer0)), 'seconds'))
+  }
 
   # Indices to keep:
-  ind_sir = sample(1:nsave,
-                   size = ceiling(sir_frac*nsave),
-                   prob = exp(post_logw),
-                   replace = FALSE)
+  ind_sir = sample(
+    1:nsave,
+    size = ceiling(sir_frac * nsave),
+    prob = exp(post_logw),
+    replace = FALSE
+  )
   # Update:
-  fit$post_theta = fit$post_theta[ind_sir,];
+  fit$post_theta = fit$post_theta[ind_sir, ]
   fit$coefficients = colMeans(fit$post_theta)
-  fit$post_ypred = fit$post_ypred[ind_sir,]
-  fit$post_g = fit$post_g[ind_sir,]
+  fit$post_ypred = fit$post_ypred[ind_sir, ]
+  fit$post_g = fit$post_g[ind_sir, ]
 
   return(fit)
 }
@@ -1475,25 +1738,25 @@ sir_adjust = function(fit,
 #' @param Fz_eval CDF of z evaluated at \code{z}
 #' @return A smooth monotone function which can be used for evaluations of the transformation.
 #' @importFrom stats splinefun
-g_fun = function(y, Fy_eval, z, Fz_eval){
-
+g_fun = function(y, Fy_eval, z, Fz_eval) {
   # Quick checks:
-  if(length(y) != length(Fy_eval)){
+  if (length(y) != length(Fy_eval)) {
     stop('length of y must equal length of Fy_eval')
   }
-  if(length(z) != length(Fz_eval)){
+  if (length(z) != length(Fz_eval)) {
     stop('length of z must equal length of Fz_eval')
   }
 
   # Remove duplicates:
   z_unique = which(!duplicated(Fz_eval))
-  Fz_eval = Fz_eval[z_unique]; z = z[z_unique]
+  Fz_eval = Fz_eval[z_unique]
+  z = z[z_unique]
   y_unique = which(!duplicated(Fy_eval))
-  Fy_eval = Fy_eval[y_unique]; y = y[y_unique]
+  Fy_eval = Fy_eval[y_unique]
+  y = y[y_unique]
 
   # Inverse the CDF of z:
-  Fz_inv = function(s) stats::spline(Fz_eval, z, method = "hyman",
-                                     xout = s)$y
+  Fz_inv = function(s) stats::spline(Fz_eval, z, method = "hyman", xout = s)$y
   # Ref: https://stats.stackexchange.com/questions/390931/compute-quantile-function-from-a-mixture-of-normal-distribution/390936#390936
 
   # Check:
@@ -1503,7 +1766,8 @@ g_fun = function(y, Fy_eval, z, Fz_eval){
   g0 = Fz_inv(Fy_eval)
 
   # Make sure we have only finite values of g0 (infinite values occur for F_y = 0 or F_y = 1)
-  y = y[which(is.finite(g0))]; g0 = g0[which(is.finite(g0))]
+  y = y[which(is.finite(g0))]
+  g0 = g0[which(is.finite(g0))]
 
   # Return the smoothed (monotone) transformation:
   return(stats::splinefun(y, g0, method = 'monoH.FC'))
@@ -1518,14 +1782,14 @@ g_fun = function(y, Fy_eval, z, Fz_eval){
 #' @return A function which can be used for evaluations of the
 #' (approximate) inverse transformation function.
 g_inv_approx = function(g, t_grid) {
-
   # Evaluate g() on the grid:
   g_grid = g(t_grid)
 
   # Approximate inverse function:
   function(s) {
-    sapply(s, function(si)
-      t_grid[which.min(abs(si - g_grid))])
+    sapply(s, function(si) {
+      t_grid[which.min(abs(si - g_grid))]
+    })
   }
 }
 #---------------------------------------------------------------
@@ -1541,22 +1805,21 @@ g_inv_approx = function(g, t_grid) {
 #' assume mean zero
 #' @param sd_vec \code{n}-dimensional vector of standard deviations
 #' @return CDF of z evaluated at \code{z}
-Fz_fun = function(z,
-                  weights = NULL,
-                  mean_vec = NULL,
-                  sd_vec){
+Fz_fun = function(z, weights = NULL, mean_vec = NULL, sd_vec) {
   # Dimension:
   n = length(sd_vec)
 
   # Checks:
-  if(is.null(weights)) weights = rep(1/n, n)
-  if(is.null(mean_vec)) mean_vec = rep(0, n)
+  if (is.null(weights)) {
+    weights = rep(1 / n, n)
+  }
+  if (is.null(mean_vec)) {
+    mean_vec = rep(0, n)
+  }
 
   # Return:
-  rowSums(sapply(1:n, function(i){
-    weights[i]*pnorm(z,
-                mean = mean_vec[i],
-                sd = sd_vec[i])
+  rowSums(sapply(1:n, function(i) {
+    weights[i] * pnorm(z, mean = mean_vec[i], sd = sd_vec[i])
   }))
 }
 #' Grid contraction
@@ -1575,13 +1838,18 @@ Fz_fun = function(z,
 #' on the expanded grid
 #' @return a list containing the grid points \code{z} and the (interpolated) function
 #' \code{Fz} at those points
-contract_grid = function(z, Fz, lower, upper, add_back = TRUE, monotone = TRUE){
-
+contract_grid = function(
+  z,
+  Fz,
+  lower,
+  upper,
+  add_back = TRUE,
+  monotone = TRUE
+) {
   # Identify the offending indexes:
   bad_ind = which(Fz < lower | Fz > upper)
 
-  if(length(bad_ind) > 0){
-
+  if (length(bad_ind) > 0) {
     # Original:
     z0 = z
 
@@ -1592,18 +1860,22 @@ contract_grid = function(z, Fz, lower, upper, add_back = TRUE, monotone = TRUE){
     z = z[-bad_ind]
 
     # Add back, if desired:
-    if(add_back){
-      z = sort(unique(c(z,
-                        seq(min(z),
-                            max(z),
-                            length.out = ngrid - length(z) + 2))))
+    if (add_back) {
+      z = sort(unique(c(
+        z,
+        seq(min(z), max(z), length.out = ngrid - length(z) + 2)
+      )))
     }
-    if(monotone){
-      Fz = stats::spline(x = z0[-bad_ind], y = Fz[-bad_ind], method = 'hyman', xout = z)$y
+    if (monotone) {
+      Fz = stats::spline(
+        x = z0[-bad_ind],
+        y = Fz[-bad_ind],
+        method = 'hyman',
+        xout = z
+      )$y
     } else {
       Fz = stats::spline(x = z0[-bad_ind], y = Fz[-bad_ind], xout = z)$y
     }
   }
-  list(z = z,
-       Fz = Fz)
+  list(z = z, Fz = Fz)
 }

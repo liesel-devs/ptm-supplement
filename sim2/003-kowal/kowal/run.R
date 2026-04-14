@@ -44,73 +44,48 @@ run_one <- function(
     nsave = nsave,
     approx_g = FALSE,
     locs_test = test[, c("x0", "x1", "x2", "x3")],
-    X_test = cbind(1, test[, c("x0", "x1", "x2", "x3")])
+    X_test = cbind(1, test[, c("x0", "x1", "x2", "x3")]),
+    y_test = test$y
   )
   timing <- toc(quiet = TRUE)
   log_info("Model fit complete.")
 
-  # ..............................................................................
-  # ---- Log Score and KLD on test data ----
-  # ..............................................................................
+  apply(m$post_LogPDFytrain, 2, var) |> hist()
 
-  log_info("Starting log score and KLD computation.")
-  dkde <- function(x, xnew) {
-    density_values <- map_dbl(
-      xnew,
-      function(one_element_of_xnew) {
-        density(
-          x = x,
-          from = one_element_of_xnew,
-          to = one_element_of_xnew,
-          n = 1,
-          kernel = "gaussian",
-          bw = "SJ"
-        )$y
-      }
-    )
+  var(m$post_LogPDFytrain) |> dim()
 
-    density_values
-  }
+  cdf_mad <- mean(abs(test$cdf - colMeans(m$post_CDFy)))
 
-  i <- 1:ncol(m$post_ypred)
-  # applying kernel density estimate to each set of conditional samples
-  # evaluating at test observations
-  pdf_estimated <- map_dbl(i, function(i) {
-    dkde(xnew = test$y[i], x = m$post_ypred[, i])
+  log_lik_contributions <- apply(m$post_LogPDFy, 2, function(x) {
+    m = max(x)
+    m + log(mean(exp(x - m)))
   })
-  log_pdf_estimated <- pmax(pdf_estimated, 1e-23) |> # safeguard against -Inf
-    log()
 
-  log_score_approx <- -sum(log_pdf_estimated)
-  kld_approx = mean(test$log_pdf - log_pdf_estimated)
+  kld <- mean(test$log_pdf - log_lik_contributions)
 
-  log_info("Log score and KLD computation finished.")
-
-  log_score_contributions <- scoringRules::logs_sample(test$y, t(m$post_ypred))
-  kld_approx2 <- mean(test$log_pdf + log_score_contributions)
-  log_score_approx2 <- sum(log_score_contributions)
+  waic <- loo::waic(m$post_LogPDFytrain)$estimates[3]
 
   # ..............................................................................
-  # ---- Mean absoluten deviation of CDF on test data ----
+  # ---- CRPS on test data ----
   # ..............................................................................
-  log_info("Starting CDF computation.")
-  cdf_estimated <- map_dbl(i, function(i) {
-    skewsamp::pemp(q = test$y[i], sample = m$post_ypred[, i])
-  })
-  cdf_mad <- mean(abs(test$cdf - cdf_estimated))
+  log_info("Starting CRPS computation.")
+  crps <- mean(crps_sample(test$y, t(m$post_ypred)))
+  log_info("CRPS computation finished.")
 
-  cdf_samples <- map_dfr(i, function(i) {
-    cdf_evals <- skewsamp::pemp(
-      q = m$post_ypred[, i],
-      sample = m$post_ypred[, i]
+  # ..............................................................................
+  # ---- CDF calibration ----
+  # ..............................................................................
+
+  cdf_samples <- as.data.frame(t(m$post_CDFy)) |>
+    as_tibble() |>
+    mutate(n = row_number()) |>
+    mutate(cdf_true = test$cdf) |>
+    pivot_longer(
+      starts_with("V"),
+      values_to = "cdf_sample",
+      names_to = "draw",
+      names_prefix = "V"
     )
-    tibble(
-      n = i,
-      cdf_sample = cdf_evals,
-      cdf_true = test$cdf[i],
-      draw = 1:length(cdf_evals)
-    )
-  })
 
   cdf_calibration <- cdf_samples |>
     group_by(n) |>
@@ -122,24 +97,14 @@ run_one <- function(
     mutate(in_ci = q05 <= cdf_true & cdf_true <= q95) |>
     summarise(coverage = mean(in_ci), width = mean(q95 - q05)) |>
     identity()
-  log_info("CDF computation finished.")
-
-  # ..............................................................................
-  # ---- CRPS on test data ----
-  # ..............................................................................
-  log_info("Starting CRPS computation.")
-  crps <- mean(crps_sample(test$y, t(m$post_ypred)))
-  log_info("CRPS computation finished.")
 
   # ..............................................................................
   # ---- Summary of distribution analysis ----
   # ..............................................................................
 
   dist_summary <- tibble(
-    kld = kld_approx2,
-    log_score = log_score_approx2,
-    kld_manual = kld_approx,
-    log_score_manual = log_score_approx,
+    kld,
+    waic,
     cdf_mad,
     crps
   ) |>

@@ -1,7 +1,7 @@
 library(tidyverse)
 
 data_seed <- 1:100
-data_type <- c("ptm")
+data_type <- c("gaussian", "mixture", "skewnorm", "ptm")
 ntrain <- c(250, 500, 1000)
 
 # data_seed <- 1:2
