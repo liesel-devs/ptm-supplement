@@ -44,9 +44,9 @@ jupyter-client==8.7.0
 jupyter-core==5.9.1
 kiwisolver==1.4.9
 liesel==0.4.3
-liesel-bctm @ git+https://github.com/liesel-devs/liesel-bctm.git@a5466f47aec46d0a09afcb08800f209f22446f92
-liesel-gam @ git+https://github.com/liesel-devs/liesel_gam.git@58d68322c22952db39720b91207c7a4ec27d16c1
-liesel-ptm @ git+https://github.com/liesel-devs/liesel-ptm.git@466a7f55864cc0a6034fcff79b826cf626d3ccd0
+./packages/liesel-bctm-a5466f47aec46d0a09afcb08800f209f22446f92.tar.gz
+./packages/liesel-gam-58d68322c22952db39720b91207c7a4ec27d16c1.tar.gz
+./packages/liesel-ptm-466a7f55864cc0a6034fcff79b826cf626d3ccd0.tar.gz
 lineax==0.0.8
 matplotlib==3.10.6
 matplotlib-inline==0.2.1
@@ -93,7 +93,7 @@ scipy==1.16.2
 seaborn==0.13.2
 setuptools==80.9.0
 six==1.17.0
-smoothcon @ git+https://github.com/liesel-devs/smoothcon.git@604c7cd3258c318128537a812f34da934b12f513
+./packages/smoothcon-604c7cd3258c318128537a812f34da934b12f513.tar.gz
 stack-data==0.6.3
 statsmodels==0.14.5
 tenacity==9.1.2
